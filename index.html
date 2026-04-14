@@ -1,381 +1,336 @@
-import { useState, useEffect, useRef } from “react”;
+import { useState, useEffect } from “react”;
 
-// ─── goSNOB.ai DESIGN TOKENS ────────────────────────────────────────
-const C = {
-bg: “#000000”,
-card: “#0a0a0a”,
-cardHover: “#111111”,
-border: “#1a1a1a”,
-borderHover: “#2a2a2a”,
-text: “#cccccc”,
-muted: “#666666”,
-dim: “#444444”,
-neon: “#c8ff00”,
-neonDim: “#a0cc00”,
-white: “#ffffff”,
+const C = { accent: “#b044e0”, accentLight: “#d68eff”, black: “#000”, white: “#fff”, gray1: “#f5f5f5”, gray3: “#999”, gray5: “#555”, border: “#e0e0e0” };
+
+const T = {
+de: {
+hero_sub: “Network-Operated Brain · Basel”, hero_line1: “Kein Mensch.”, hero_line2: “Kein Warten.”, hero_line3: “Nur”, tap: “— Tippen —”, call: “CALL SNOB”,
+nav: [“Leistungen”,“Pricing”,“Rechtliches”,“Kontakt”],
+services_title: “Leistungen”, services_sub: “AI Plattform & IT Speziallösungen”,
+pricing_title: “Klar. Direkt.”, pricing_exkl: “Alle Preise exkl. MwSt.”, pricing_cta: “Anfragen”,
+legal_title: “Rechtliches”, legal_sub: “Schweizer Recht · Gerichtsstand Basel-Stadt · DSG & DSGVO”,
+legal_date: “Stand: April 2026 · goSNOB.ai · Basel-Stadt, Schweiz”,
+tabs: [“AGB”,“Datenschutz”,“AVV”], dl: [“↓ AGB”,“↓ Datenschutz”,“↓ AVV”],
+cta1: “Kein Sales-Pitch.”, cta2: “Ruf SNOB an.”, cta3: “Sag was du brauchst.”,
+cta_sub: “Wir glauben nicht an E-Mail-Spam. Melde dich — wir wissen wer du bist.”,
+impressum: “Impressum”, plan_mo: “CHF / Monat”, plan_ask: “AUF ANFRAGE”,
+fc: “© 2026 goSNOB.ai · Basel”, ff: “Founded by Timothy Jordi & Jan Mironiuk · Swiss Made”, fd: “Programmiert von Insomnia · Basel”,
+svcs: [
+{ i: “📞”, t: “AI Voice Agents”, d: “Inbound & Outbound · DE/EN/FR · Echtzeit” },
+{ i: “💬”, t: “AI Chat”, d: “Support, Sales, Lead-Qualifikation · 24/7” },
+{ i: “⚙️”, t: “Automation”, d: “CRM · eCal · Payments · Workflows” },
+{ i: “🔌”, t: “API & Integration”, d: “Google · GitHub · eCal · REST” },
+{ i: “💻”, t: “Custom Software”, d: “Web & Mobile · Idee bis Deployment” },
+{ i: “🧠”, t: “KI-Lösungen”, d: “ML · NLP · Vision · Individuell” },
+],
+plans: [
+{ n: “GoSTART”, p: “333”, f: [“Core Setup”,“AI Calls & Automation”,“DE / EN / FR”,“Dashboard & Analytics”,“Email Support”] },
+{ n: “GoFULL”, p: “777”, pop: true, f: [“Alles aus GoSTART”,“Erweiterte Flows”,“CRM & Kalender”,“Outbound Kampagnen”,“Priority Support”] },
+{ n: “Corporate”, p: null, f: [“Alles aus GoFULL”,“Individuelles Setup”,“Mehrere Standorte”,“API-Architektur”,“Account Manager”] },
+],
+agb: [
+{ t: “1. Geltungsbereich”, c: “Diese AGB regeln die Nutzung der AI-Kommunikationsplattform und IT-Dienstleistungen von goSNOB.ai, Basel-Stadt, Schweiz. Mit der Nutzung akzeptieren Sie diese AGB. Anwendbares Recht: Schweizer Recht. Gerichtsstand: Basel-Stadt.” },
+{ t: “2. Leistungen”, c: “SNOB bietet: (a) AI-Kommunikationsplattform (Voice Agents, Chat, Messaging); (b) IT-Speziallösungen (Custom Software, KI, Cloud); (c) Beratung und Support. Hosting: Schweiz (Metanet). Integrationen: Google, eCal, GitHub. Kein White-Label.” },
+{ t: “3. Zugang & Account”, c: “Mindestalter 18. Verantwortung für Zugangsdaten und Account-Aktivitäten. Sperrung/Kündigung bei Verstössen, Zahlungsverzug oder Missbrauch.” },
+{ t: “4. Preise & Zahlung”, c: “GoSTART CHF 333/Mt., GoFULL CHF 777/Mt., Corporate auf Anfrage. Exkl. MwSt. Stripe. Auto-Renewal, 30 Tage Kündigungsfrist. Keine Rückerstattung (vorbehaltlich OR).” },
+{ t: “5. Compliance”, c: “Einhaltung DSG, FMG, UWG, DSGVO (EU-Kontakt). Einwilligungen einholen. Verboten: Spam, Betrug, Belästigung, Reverse Engineering.” },
+{ t: “6. Inhalte & Daten”, c: “Eigentumsrechte bleiben bei Ihnen. Lizenz an SNOB nur zur Leistungserbringung. Verantwortung für Rechtmässigkeit und Sicherung.” },
+{ t: “7. Geistiges Eigentum”, c: “Plattform-Rechte bei SNOB. Eingeschränkte, widerrufliche Nutzungslizenz für interne Geschäftszwecke.” },
+{ t: “8. Datenschutz”, c: “Separate Datenschutzerklärung gilt. SNOB = Auftragsverarbeiter. Sub-Processor: Metanet, Google, eCal, GitHub, Stripe. Datenstandort: Schweiz.” },
+{ t: “9. Haftung”, c: “Ausschluss indirekter Schäden. Cap: 3 Monatsgebühren oder CHF 500. Ausnahmen: Vorsatz, grobe Fahrlässigkeit, Personenschäden.” },
+{ t: “10. Kündigung”, c: “30 Tage Frist zum Periodenende. 30 Tage Datenexport, danach Löschung. Diensteinstellung: 90 Tage Vorlauf.” },
+{ t: “11. Gerichtsstand”, c: “Schweizer Recht (ohne CISG). Gerichtsstand: Basel-Stadt. EU-Konsumenten: ODR-Plattform verfügbar.” },
+],
+priv: [
+{ t: “1. Verantwortliche Stelle”, c: “goSNOB.ai, Basel-Stadt = Controller. Für Kundendaten: Sie = Controller, SNOB = Processor. DSG & DSGVO.” },
+{ t: “2. Erhobene Daten”, c: “Kontodaten, Zahlungsdaten (Stripe), Nutzungsdaten, Plattformdaten als Processor.” },
+{ t: “3. Rechtsgrundlagen”, c: “Vertragserfüllung, berechtigtes Interesse, gesetzliche Pflicht, Einwilligung.” },
+{ t: “4. Weitergabe”, c: “Kein Verkauf. Sub-Processor: Metanet (CH), Stripe, Google, eCal, GitHub. SCCs.” },
+{ t: “5. Speicherung”, c: “Vertragslaufzeit + 10 Jahre (Steuer). Aufnahmen: 90 Tage. Nach Kündigung: 30 Tage.” },
+{ t: “6. Sicherheit”, c: “TLS, Verschlüsselung, MFA, Zugriffskontrollen. Datenstandort: Schweiz. Breach: 72h.” },
+{ t: “7. Ihre Rechte”, c: “Auskunft, Berichtigung, Löschung, Einschränkung, Portabilität, Widerspruch. privacy@gosnob.ai. 30 Tage.” },
+{ t: “8. Cookies”, c: “Essentiell (ohne Einwilligung). Analytics (mit Einwilligung). Keine Marketing-Cookies.” },
+],
+dpa: [
+{ t: “Rollen”, c: “Sie = Controller, SNOB = Processor. Nur nach Ihren Weisungen. Kein Profiling, kein Modelltraining.” },
+{ t: “Daten”, c: “Telefonnummern, Namen, Anruf-Metadaten, Aufnahmen/Transkripte, Logs. Keine Art. 9 DSGVO.” },
+{ t: “Sicherheit”, c: “RBAC, MFA, TLS, Verschlüsselung, Monitoring, Incident Response, Penetrationstests.” },
+{ t: “Sub-Processor”, c: “Metanet (CH), Stripe, Google, eCal, GitHub. 30 Tage Vorankündigung.” },
+{ t: “Löschung”, c: “Aufnahmen: 90d (max 180). Nach Vertragsende: 30–60d, Backups ≤180d.” },
+{ t: “Transfers”, c: “Datenstandort Schweiz. EU-SCCs Modul 2. Schweizer Recht, Basel-Stadt.” },
+],
+},
+en: {
+hero_sub: “Network-Operated Brain · Basel”, hero_line1: “No human.”, hero_line2: “No waiting.”, hero_line3: “Just”, tap: “— Tap —”, call: “CALL SNOB”,
+nav: [“Services”,“Pricing”,“Legal”,“Contact”],
+services_title: “Services”, services_sub: “AI Platform & Custom IT Solutions”,
+pricing_title: “Clear. Direct.”, pricing_exkl: “All prices excl. VAT.”, pricing_cta: “Inquire”,
+legal_title: “Legal”, legal_sub: “Swiss Law · Jurisdiction Basel-Stadt · DSG & GDPR”,
+legal_date: “As of: April 2026 · goSNOB.ai · Basel-Stadt, Switzerland”,
+tabs: [“T&C”,“Privacy”,“DPA”], dl: [“↓ T&C”,“↓ Privacy”,“↓ DPA”],
+cta1: “No sales pitch.”, cta2: “Call SNOB.”, cta3: “Say what you need.”,
+cta_sub: “We don’t believe in email spam. Reach out — we know who you are.”,
+impressum: “Legal Notice”, plan_mo: “CHF / month”, plan_ask: “ON REQUEST”,
+fc: “© 2026 goSNOB.ai · Basel”, ff: “Founded by Timothy Jordi & Jan Mironiuk · Swiss Made”, fd: “Built by Insomnia · Basel”,
+svcs: [
+{ i: “📞”, t: “AI Voice Agents”, d: “Inbound & Outbound · DE/EN/FR · Real-time” },
+{ i: “💬”, t: “AI Chat”, d: “Support, Sales, Lead Qualification · 24/7” },
+{ i: “⚙️”, t: “Automation”, d: “CRM · eCal Booking · Payments · Workflows” },
+{ i: “🔌”, t: “API & Integration”, d: “Google · GitHub · eCal · REST” },
+{ i: “💻”, t: “Custom Software”, d: “Web & Mobile · Idea to Deployment” },
+{ i: “🧠”, t: “AI Solutions”, d: “ML · NLP · Vision · Tailored” },
+],
+plans: [
+{ n: “GoSTART”, p: “333”, f: [“Core Setup”,“AI Calls & Automation”,“DE / EN / FR”,“Dashboard & Analytics”,“Email Support”] },
+{ n: “GoFULL”, p: “777”, pop: true, f: [“Everything in GoSTART”,“Advanced Flows”,“CRM & Calendar”,“Outbound Campaigns”,“Priority Support”] },
+{ n: “Corporate”, p: null, f: [“Everything in GoFULL”,“Custom Setup”,“Multiple Locations”,“API Architecture”,“Account Manager”] },
+],
+agb: [
+{ t: “1. Scope”, c: “These Terms govern use of goSNOB.ai’s AI communication platform and IT services, Basel-Stadt, Switzerland. By using our services you accept these Terms. Governing law: Swiss law. Jurisdiction: Basel-Stadt.” },
+{ t: “2. Services”, c: “SNOB provides: (a) AI communication platform (Voice Agents, Chat, Messaging); (b) Custom IT solutions (Software, AI, Cloud); (c) Consulting and support. Hosting: Switzerland (Metanet). Integrations: Google, eCal, GitHub. No white-label.” },
+{ t: “3. Access & Account”, c: “Minimum age 18. You are responsible for credentials and account activity. Suspension/termination for violations, non-payment, or misuse.” },
+{ t: “4. Pricing & Payment”, c: “GoSTART CHF 333/mo, GoFULL CHF 777/mo, Corporate on request. Excl. VAT. Stripe. Auto-renewal, 30-day notice. No refunds (subject to Swiss consumer law).” },
+{ t: “5. Compliance”, c: “Comply with DSG, FMG, UWG, GDPR (EU contacts). Obtain all consents. Prohibited: spam, fraud, harassment, reverse engineering.” },
+{ t: “6. Content & Data”, c: “Your ownership rights remain. License to SNOB only for service delivery. You are responsible for legality and backup.” },
+{ t: “7. IP”, c: “Platform rights belong to SNOB. Limited, revocable license for internal business purposes.” },
+{ t: “8. Data Protection”, c: “Separate Privacy Policy applies. SNOB = Processor. Sub-processors: Metanet, Google, eCal, GitHub, Stripe. Data location: Switzerland.” },
+{ t: “9. Liability”, c: “Exclusion of indirect damages. Cap: 3 months’ fees or CHF 500. Exceptions: intent, gross negligence, personal injury.” },
+{ t: “10. Termination”, c: “30-day notice to period end. 30 days for data export, then deletion. Service discontinuation: 90 days’ notice.” },
+{ t: “11. Jurisdiction”, c: “Swiss law (excl. CISG). Jurisdiction: Basel-Stadt. EU consumers: ODR platform available.” },
+],
+priv: [
+{ t: “1. Controller”, c: “goSNOB.ai, Basel-Stadt = Controller. For your customer data: You = Controller, SNOB = Processor. DSG & GDPR.” },
+{ t: “2. Data Collected”, c: “Account data, payment data (Stripe), usage data, platform data as Processor.” },
+{ t: “3. Legal Basis”, c: “Contract performance, legitimate interest, legal obligation, consent.” },
+{ t: “4. Sharing”, c: “No selling. Sub-processors: Metanet (CH), Stripe, Google, eCal, GitHub. SCCs.” },
+{ t: “5. Retention”, c: “Contract term + 10 years (tax). Recordings: 90 days. After termination: 30-day grace.” },
+{ t: “6. Security”, c: “TLS, encryption at rest, MFA, access controls. Data location: Switzerland. Breach: 72h.” },
+{ t: “7. Your Rights”, c: “Access, rectification, erasure, restriction, portability, objection. privacy@gosnob.ai. 30 days.” },
+{ t: “8. Cookies”, c: “Essential (no consent). Analytics (with consent). No marketing cookies.” },
+],
+dpa: [
+{ t: “Roles”, c: “You = Controller, SNOB = Processor. Only per your instructions. No profiling, no model training.” },
+{ t: “Data”, c: “Phone numbers, names, call metadata, recordings/transcripts, logs. No Art. 9 GDPR data.” },
+{ t: “Security”, c: “RBAC, MFA, TLS, encryption, monitoring, incident response, pen tests.” },
+{ t: “Sub-processors”, c: “Metanet (CH), Stripe, Google, eCal, GitHub. 30 days’ notice for changes.” },
+{ t: “Deletion”, c: “Recordings: 90d (max 180). After termination: 30-60d, backups ≤180d.” },
+{ t: “Transfers”, c: “Data location: Switzerland. EU SCCs Module 2. Swiss law, Basel-Stadt.” },
+],
+},
+fr: {
+hero_sub: “Network-Operated Brain · Bâle”, hero_line1: “Pas d’humain.”, hero_line2: “Pas d’attente.”, hero_line3: “Juste”, tap: “— Appuyer —”, call: “APPELER SNOB”,
+nav: [“Services”,“Tarifs”,“Juridique”,“Contact”],
+services_title: “Services”, services_sub: “Plateforme AI & Solutions IT sur mesure”,
+pricing_title: “Clair. Direct.”, pricing_exkl: “Tous les prix hors TVA.”, pricing_cta: “Demander”,
+legal_title: “Juridique”, legal_sub: “Droit suisse · For juridique Bâle-Ville · LPD & RGPD”,
+legal_date: “État: Avril 2026 · goSNOB.ai · Bâle-Ville, Suisse”,
+tabs: [“CGV”,“Confidentialité”,“CST”], dl: [“↓ CGV”,“↓ Confidentialité”,“↓ CST”],
+cta1: “Pas de pitch.”, cta2: “Appelez SNOB.”, cta3: “Dites ce qu’il vous faut.”,
+cta_sub: “Nous ne croyons pas au spam. Contactez-nous — nous savons qui vous êtes.”,
+impressum: “Mentions légales”, plan_mo: “CHF / mois”, plan_ask: “SUR DEMANDE”,
+fc: “© 2026 goSNOB.ai · Bâle”, ff: “Fondé par Timothy Jordi & Jan Mironiuk · Swiss Made”, fd: “Développé par Insomnia · Bâle”,
+svcs: [
+{ i: “📞”, t: “Agents Vocaux AI”, d: “Entrant & Sortant · DE/EN/FR · Temps réel” },
+{ i: “💬”, t: “Chat AI”, d: “Support, Ventes, Qualification · 24/7” },
+{ i: “⚙️”, t: “Automatisation”, d: “CRM · eCal · Paiements · Workflows” },
+{ i: “🔌”, t: “API & Intégration”, d: “Google · GitHub · eCal · REST” },
+{ i: “💻”, t: “Logiciel sur mesure”, d: “Web & Mobile · Idée au déploiement” },
+{ i: “🧠”, t: “Solutions IA”, d: “ML · NLP · Vision · Adapté” },
+],
+plans: [
+{ n: “GoSTART”, p: “333”, f: [“Configuration de base”,“Appels AI & Automation”,“DE / EN / FR”,“Dashboard & Analytics”,“Support Email”] },
+{ n: “GoFULL”, p: “777”, pop: true, f: [“Tout de GoSTART”,“Flux avancés”,“CRM & Calendrier”,“Campagnes sortantes”,“Support prioritaire”] },
+{ n: “Corporate”, p: null, f: [“Tout de GoFULL”,“Configuration individuelle”,“Plusieurs sites”,“Architecture API”,“Account Manager”] },
+],
+agb: [
+{ t: “1. Champ d’application”, c: “Ces CGV régissent l’utilisation de la plateforme AI et des services IT de goSNOB.ai, Bâle-Ville, Suisse. En utilisant nos services, vous acceptez ces CGV. Droit applicable: droit suisse. For juridique: Bâle-Ville.” },
+{ t: “2. Services”, c: “SNOB offre: (a) plateforme AI (Agents vocaux, Chat, Messaging); (b) solutions IT sur mesure (logiciel, IA, cloud); (c) conseil et support. Hébergement: Suisse (Metanet). Intégrations: Google, eCal, GitHub. Pas de white-label.” },
+{ t: “3. Accès & Compte”, c: “Âge minimum 18 ans. Responsabilité des identifiants et activités. Suspension/résiliation en cas de violation, défaut de paiement ou abus.” },
+{ t: “4. Prix & Paiement”, c: “GoSTART CHF 333/mois, GoFULL CHF 777/mois, Corporate sur demande. Hors TVA. Stripe. Renouvellement auto, 30j préavis. Pas de remboursement (sous réserve CO).” },
+{ t: “5. Conformité”, c: “Respect LPD, LTC, LCD, RGPD (contacts UE). Obtenir les consentements. Interdit: spam, fraude, harcèlement, rétro-ingénierie.” },
+{ t: “6. Contenus & Données”, c: “Propriété préservée. Licence à SNOB pour la fourniture uniquement. Responsabilité légalité et sauvegarde.” },
+{ t: “7. PI”, c: “Droits plateforme chez SNOB. Licence limitée et révocable pour usage interne.” },
+{ t: “8. Protection des données”, c: “Politique séparée. SNOB = sous-traitant. Sous-traitants: Metanet, Google, eCal, GitHub, Stripe. Localisation: Suisse.” },
+{ t: “9. Responsabilité”, c: “Exclusion dommages indirects. Plafond: 3 mois ou CHF 500. Exceptions: intention, négligence grave, dommages corporels.” },
+{ t: “10. Résiliation”, c: “30j préavis. 30j export données, puis suppression. Arrêt service: 90j préavis.” },
+{ t: “11. For juridique”, c: “Droit suisse (sans CVIM). For: Bâle-Ville. Consommateurs UE: plateforme ODR.” },
+],
+priv: [
+{ t: “1. Responsable”, c: “goSNOB.ai, Bâle-Ville = responsable. Données clients: Vous = responsable, SNOB = sous-traitant. LPD & RGPD.” },
+{ t: “2. Données”, c: “Compte, paiement (Stripe), utilisation, données plateforme comme sous-traitant.” },
+{ t: “3. Bases juridiques”, c: “Exécution contrat, intérêt légitime, obligation légale, consentement.” },
+{ t: “4. Transmission”, c: “Pas de vente. Sous-traitants: Metanet (CH), Stripe, Google, eCal, GitHub. CCT.” },
+{ t: “5. Conservation”, c: “Contrat + 10 ans (fiscal). Enregistrements: 90j. Après résiliation: 30j délai.” },
+{ t: “6. Sécurité”, c: “TLS, chiffrement, MFA, contrôles d’accès. Localisation: Suisse. Violation: 72h.” },
+{ t: “7. Vos droits”, c: “Accès, rectification, effacement, limitation, portabilité, opposition. privacy@gosnob.ai. 30j.” },
+{ t: “8. Cookies”, c: “Essentiels (sans consentement). Analytics (avec). Pas de marketing.” },
+],
+dpa: [
+{ t: “Rôles”, c: “Vous = responsable, SNOB = sous-traitant. Instructions uniquement. Pas de profilage, pas d’entraînement.” },
+{ t: “Données”, c: “Numéros, noms, métadonnées, enregistrements/transcriptions, journaux. Pas Art. 9 RGPD.” },
+{ t: “Sécurité”, c: “RBAC, MFA, TLS, chiffrement, monitoring, incidents, tests de pénétration.” },
+{ t: “Sous-traitants”, c: “Metanet (CH), Stripe, Google, eCal, GitHub. 30j préavis.” },
+{ t: “Suppression”, c: “Enregistrements: 90j (max 180). Résiliation: 30-60j, sauvegardes ≤180j.” },
+{ t: “Transferts”, c: “Localisation: Suisse. CCT UE Module 2. Droit suisse, Bâle-Ville.” },
+],
+},
 };
 
-// ─── LEGAL DATA ─────────────────────────────────────────────────────
-const AGB = [
-{ t: “1. Geltungsbereich”, c: “Diese Allgemeinen Geschäftsbedingungen (AGB) regeln die Nutzung der AI-Kommunikationsplattform und IT-Dienstleistungen von goSNOB.ai, einem Schweizer Unternehmen mit Sitz in Basel-Stadt (nachfolgend «SNOB», «wir», «uns»). Mit der Nutzung unserer Dienste akzeptieren Sie diese AGB. Anwendbares Recht: Schweizer Recht. Gerichtsstand: Basel-Stadt.” },
-{ t: “2. Leistungen”, c: “SNOB bietet: (a) eine AI-gestützte Kommunikationsplattform für automatisierte Voice Agents, Chat und Messaging; (b) IT-Speziallösungen inkl. Custom Software, KI-Entwicklung und Cloud-Infrastruktur; (c) Beratung und technischen Support. Die Plattform wird auf Schweizer Infrastruktur (Metanet) gehostet. Integrationen mit Drittdiensten (Google, eCal, GitHub) unterliegen zusätzlich deren eigenen Nutzungsbedingungen. White-Label-Lösungen werden nicht angeboten.” },
-{ t: “3. Zugang & Account”, c: “Nutzer müssen mindestens 18 Jahre alt sein. Sie sind für die Geheimhaltung Ihrer Zugangsdaten und alle Aktivitäten unter Ihrem Account verantwortlich. Wir können Accounts bei Verstössen gegen diese AGB, Zahlungsverzug oder missbräuchlicher Nutzung jederzeit sperren oder kündigen.” },
-{ t: “4. Preise & Zahlung”, c: “Aktuelle Tarife: GoSTART CHF 333/Mt., GoFULL CHF 777/Mt., Corporate auf Anfrage. Alle Preise verstehen sich exklusive MwSt. Zahlung erfolgt via Stripe. Abonnements verlängern sich automatisch, sofern nicht 30 Tage vor Ablauf gekündigt wird. Preisänderungen werden 30 Tage im Voraus mitgeteilt. Bereits bezahlte Gebühren werden nicht erstattet, vorbehaltlich zwingender Schweizer Konsumentenschutzrechte (OR).” },
-{ t: “5. Nutzungspflichten & Compliance”, c: “Sie verpflichten sich zur Einhaltung aller anwendbaren Gesetze, insbesondere: Schweizer Datenschutzgesetz (DSG), Fernmeldegesetz (FMG), Gesetz gegen unlauteren Wettbewerb (UWG), sowie DSGVO bei Kontakt mit EU-Empfängern. Sie sind allein verantwortlich für: Einholung aller erforderlichen Einwilligungen (automatisierte Anrufe, Aufnahmen, Marketing), Einhaltung von Do-Not-Call-Listen, Richtigkeit Ihrer Inhalte. Verboten sind: Spam, Betrug, Belästigung, Reverse Engineering, Weiterverkauf ohne Genehmigung.” },
-{ t: “6. Inhalte & Daten”, c: “Sie behalten alle Eigentumsrechte an Ihren Inhalten (Scripts, Knowledge Base, Kundendaten). Sie gewähren SNOB eine nicht-exklusive Lizenz zur Verarbeitung dieser Inhalte ausschliesslich zur Leistungserbringung. Sie sind verantwortlich für Rechtmässigkeit, Richtigkeit und Sicherung Ihrer Daten.” },
-{ t: “7. Geistiges Eigentum”, c: “Alle Rechte an der SNOB-Plattform (Software, Design, Algorithmen, Marken) verbleiben bei SNOB. Sie erhalten eine eingeschränkte, nicht-übertragbare, widerrufliche Nutzungslizenz für Ihre internen Geschäftszwecke. Feedback darf von SNOB frei verwendet werden.” },
-{ t: “8. Datenschutz”, c: “Die Verarbeitung personenbezogener Daten richtet sich nach unserer separaten Datenschutzerklärung, die Bestandteil dieser AGB ist. SNOB handelt als Auftragsverarbeiter für Kundendaten. Sub-Auftragsverarbeiter: Metanet (Hosting CH), Google, eCal, GitHub, Stripe. Primärer Datenstandort: Schweiz.” },
-{ t: “9. Verfügbarkeit & Support”, c: “Die Plattform wird «wie besehen» ohne Verfügbarkeitsgarantie bereitgestellt. Support per E-Mail während Schweizer Geschäftszeiten (Mo–Fr, 09:00–17:00 MEZ). Wartungsfenster werden nach Möglichkeit vorangekündigt.” },
-{ t: “10. Haftung”, c: “Haftungsausschluss für indirekte, zufällige oder Folgeschäden (entgangener Gewinn, Datenverlust, Geschäftschancen). Maximale Gesamthaftung: der höhere Betrag aus (a) den in den letzten 3 Monaten bezahlten Gebühren oder (b) CHF 500. Ausnahmen: Vorsatz, grobe Fahrlässigkeit, Personenschäden, zwingende gesetzliche Haftung nach Schweizer Recht (OR).” },
-{ t: “11. Freistellung”, c: “Sie stellen SNOB von sämtlichen Ansprüchen Dritter frei, die aus Ihrer Nutzung der Dienste, Verstössen gegen diese AGB, Verstössen gegen anwendbare Gesetze oder fehlenden Einwilligungen resultieren.” },
-{ t: “12. Laufzeit & Kündigung”, c: “Kündigung jederzeit zum Ende der laufenden Abrechnungsperiode mit 30 Tagen Frist. Nach Kündigung: 30 Tage für Datenexport, danach Löschung. Überlebende Klauseln: Zahlung, Haftung, IP, Freistellung. Bei Einstellung des Dienstes: 90 Tage Vorankündigung.” },
-{ t: “13. Höhere Gewalt”, c: “Keine Haftung für Leistungsausfälle durch Ereignisse ausserhalb zumutbarer Kontrolle (Naturkatastrophen, Krieg, Pandemien, Netzausfälle, behördliche Massnahmen).” },
-{ t: “14. Anwendbares Recht & Gerichtsstand”, c: “Diese AGB unterliegen Schweizer Recht unter Ausschluss des UN-Kaufrechts (CISG) und des Kollisionsrechts. Ausschliesslicher Gerichtsstand: Basel-Stadt, Schweiz. Für EU-Konsumenten: Online-Streitbeilegungsplattform unter https://ec.europa.eu/consumers/odr.” },
-{ t: “15. Schlussbestimmungen”, c: “Gesamte Vereinbarung. Salvatorische Klausel. Keine Abtretung ohne schriftliche Zustimmung. Änderungen mit 30 Tagen Vorlauf. Deutsche Fassung massgebend. Mitteilungen per E-Mail gültig.” },
-];
-
-const DSE = [
-{ t: “1. Verantwortliche Stelle”, c: “goSNOB.ai, Basel-Stadt, Schweiz, ist Verantwortlicher (Controller) für direkt erhobene Personendaten. Für Daten, die Sie über die Plattform verarbeiten (Ihre Kunden/Anrufempfänger), sind Sie der Verantwortliche und SNOB handelt als Auftragsverarbeiter (Processor). Rechtsgrundlagen: Schweizer DSG (revDSG) und, wo anwendbar, EU-DSGVO.” },
-{ t: “2. Erhobene Daten”, c: “Kontodaten: Name, Firma, E-Mail, Telefon, Rechnungsadresse. Zahlungsdaten: via Stripe (wir speichern keine vollständigen Kartennummern). Nutzungsdaten: IP-Adresse, Browser, Gerät, besuchte Seiten, Nutzungsdauer. Plattformdaten (als Processor): Telefonnummern, Anrufaufnahmen, Transkripte, AI-generierte Inhalte, Kontaktlisten, Kalenderintegrationsdaten.” },
-{ t: “3. Rechtsgrundlagen”, c: “Vertragserfüllung (Art. 6(1)(b) DSGVO / Art. 31 DSG): Leistungserbringung, Zahlungsabwicklung. Berechtigtes Interesse (Art. 6(1)(f) DSGVO / Art. 31 DSG): Verbesserung, Sicherheit, Analyse. Gesetzliche Pflicht: Steuer- und Buchführungspflichten. Einwilligung: Marketing, nicht-essentielle Cookies. Jederzeit widerrufbar.” },
-{ t: “4. Weitergabe & Sub-Auftragsverarbeiter”, c: “Wir verkaufen keine Daten. Sub-Auftragsverarbeiter: Metanet AG (Hosting, Schweiz), Stripe Inc. (Zahlungen, USA/Irland), Google (Integrationen), eCal (Terminbuchung), GitHub (Entwicklung). Internationale Transfers: EU-Standardvertragsklauseln (SCCs).” },
-{ t: “5. Speicherung & Löschung”, c: “Kontodaten: Vertragslaufzeit + gesetzliche Pflichten (10 Jahre Steuer). Anrufaufnahmen: 90 Tage Standard, löschbar über Dashboard. Nach Kündigung: 30 Tage Nachfrist, danach Löschung. Anonymisierte Daten dürfen unbefristet aufbewahrt werden.” },
-{ t: “6. Sicherheit”, c: “Verschlüsselung in Transit (TLS) und at Rest. Zugriffskontrollen, MFA, regelmässige Sicherheitstests. Vertraulichkeitsvereinbarungen. Incident-Response-Verfahren. Datenstandort: Schweiz (Metanet). Benachrichtigung bei Datenverletzungen innerhalb 72 Stunden.” },
-{ t: “7. Ihre Rechte”, c: “Auskunft, Berichtigung, Löschung, Einschränkung, Datenportabilität, Widerspruch, Widerruf der Einwilligung. Kontakt: privacy@gosnob.ai. Frist: 30 Tage. Beschwerderecht beim EDÖB (Bern) oder lokaler EU-Datenschutzbehörde.” },
-{ t: “8. Cookies”, c: “Essentielle Cookies (keine Einwilligung): Session, Sicherheit. Analytics (mit Einwilligung): Nutzungsanalyse. Keine Marketing-Cookies. Steuerung via Cookie-Banner und Browser.” },
-{ t: “9. Ihre Pflichten als Controller”, c: “Bei Verarbeitung von Kundendaten über SNOB: Rechtsgrundlage sicherstellen, Datenschutzhinweise erteilen, Einwilligungen einholen, Betroffenenrechte bearbeiten. Details im AVV geregelt.” },
-{ t: “10. Änderungen”, c: “Wesentliche Änderungen 30 Tage im Voraus per E-Mail. Fortgesetzte Nutzung = Zustimmung. Vorgängerversionen auf Anfrage.” },
-];
-
-const AVV = [
-{ t: “Gegenstand & Rollen”, c: “SNOB verarbeitet Personendaten ausschliesslich gemäss Ihren dokumentierten Weisungen. Sie = Controller, SNOB = Processor. Keine Verwendung für eigene Zwecke, kein Profiling, kein Modelltraining.” },
-{ t: “Datenkategorien”, c: “Telefonnummern, Namen, Kontaktdaten, Anruf-Metadaten, Aufnahmen/Transkripte (falls aktiviert), Konfigurationen, Nutzungsprotokolle, Support-Inhalte. Keine besonderen Kategorien (Art. 9 DSGVO).” },
-{ t: “Sicherheit”, c: “RBAC, MFA, TLS, Verschlüsselung at Rest, Netzwerksegmentierung, Monitoring, Incident Response, Penetrationstests, Vendor Due Diligence.” },
-{ t: “Sub-Auftragsverarbeiter”, c: “Metanet AG (Hosting CH), Stripe (Zahlungen), Google, eCal, GitHub. Änderungen: 30 Tage Vorankündigung. Widerspruchsrecht bei berechtigten Gründen.” },
-{ t: “Aufbewahrung & Löschung”, c: “Aufnahmen: 90 Tage Standard, max. 180. Metadaten: bis 12 Monate. Nach Vertragsende: Löschung 30–60 Tage, Backups innerhalb 180 Tage. Bestätigung auf Anfrage.” },
-{ t: “Internationale Transfers”, c: “Datenstandort: Schweiz. Transfers ausserhalb CH/EWR: EU-SCCs (Modul 2). Schweizer Recht, Gerichtsstand Basel-Stadt.” },
-{ t: “Betroffenenrechte”, c: “Sie führen DSRs. SNOB unterstützt innerhalb 30 Tagen. Identitätsprüfung bei Ihnen. Übermässige Anfragen: kostenpflichtig.” },
-];
-
-const SERVICES = [
-{ icon: “📞”, title: “AI Voice Agents”, desc: “Inbound & Outbound · Multilingual DE/EN/FR · Echtzeit” },
-{ icon: “💬”, title: “AI Chat”, desc: “Support, Sales, Lead-Qualifikation · 24/7 verfügbar” },
-{ icon: “⚙️”, title: “Automation”, desc: “CRM · eCal Buchung · Payments · Custom Workflows” },
-{ icon: “🔌”, title: “API & Integration”, desc: “Google · GitHub · eCal · REST · Webhooks” },
-{ icon: “💻”, title: “Custom Software”, desc: “Web & Mobile Apps · Von der Idee bis zum Deployment” },
-{ icon: “🧠”, title: “KI-Lösungen”, desc: “ML · NLP · Computer Vision · Individuell für Ihr Business” },
-];
-
-const PLANS = [
-{ name: “GoSTART”, price: “333”, features: [“Core Setup”, “AI Calls & Automation”, “DE / EN / FR”, “Dashboard & Analytics”, “Email Support”] },
-{ name: “GoFULL”, price: “777”, pop: true, features: [“Alles aus GoSTART”, “Erweiterte Flows”, “CRM & Kalender”, “Outbound Kampagnen”, “Priority Support”] },
-{ name: “Corporate”, price: “AUF ANFRAGE”, features: [“Alles aus GoFULL”, “Individuelles Setup”, “Mehrere Standorte”, “API-Architektur”, “Account Manager”] },
-];
-
-// ─── ACCORDION ──────────────────────────────────────────────────────
 function Acc({ items }) {
 const [open, setOpen] = useState(null);
-return (
-<div>
-{items.map((item, i) => {
-const isOpen = open === i;
-return (
-<div key={i} style={{ borderBottom: `1px solid ${C.border}` }}>
-<button
-onClick={() => setOpen(isOpen ? null : i)}
-style={{
-width: “100%”, display: “flex”, justifyContent: “space-between”,
-alignItems: “center”, padding: “16px 0”, background: “none”,
-border: “none”, cursor: “pointer”, textAlign: “left”,
-}}
->
-<span style={{ fontFamily: “‘Oswald’,sans-serif”, fontSize: 15, fontWeight: 500, color: C.white, letterSpacing: 0.5 }}>{item.t}</span>
-<span style={{ color: C.neon, fontSize: 20, fontWeight: 300, transition: “transform .2s”, transform: isOpen ? “rotate(45deg)” : “none”, flexShrink: 0, marginLeft: 16 }}>+</span>
+return (<div>{items.map((item, i) => {
+const o = open === i;
+return (<div key={i} style={{ borderBottom: `1px solid ${C.border}` }}>
+<button onClick={() => setOpen(o ? null : i)} style={{ width: “100%”, display: “flex”, justifyContent: “space-between”, alignItems: “center”, padding: “18px 0”, background: “none”, border: “none”, cursor: “pointer”, textAlign: “left” }}>
+<span style={{ fontFamily: “‘Instrument Sans’,sans-serif”, fontSize: 15, fontWeight: 600, color: C.black }}>{item.t}</span>
+<span style={{ color: C.accent, fontSize: 22, fontWeight: 300, transition: “transform .25s”, transform: o ? “rotate(45deg)” : “none”, flexShrink: 0, marginLeft: 16 }}>+</span>
 </button>
-<div style={{
-maxHeight: isOpen ? 600 : 0, overflow: “hidden”,
-transition: “max-height .3s ease”, paddingBottom: isOpen ? 16 : 0,
-}}>
-<p style={{ fontFamily: “‘DM Sans’,sans-serif”, fontSize: 13, color: C.text, lineHeight: 1.8, margin: 0 }}>{item.c}</p>
+<div style={{ maxHeight: o ? 500 : 0, overflow: “hidden”, transition: “max-height .35s ease” }}>
+<p style={{ fontFamily: “‘Instrument Sans’,sans-serif”, fontSize: 14, color: C.gray5, lineHeight: 1.85, margin: 0, paddingBottom: 18 }}>{item.c}</p>
 </div>
-</div>
-);
-})}
-</div>
-);
+</div>);
+})}</div>);
 }
 
-// ─── MAIN ───────────────────────────────────────────────────────────
-export default function SNOBLegal() {
-const [tab, setTab] = useState(“agb”);
-const [scrolled, setScrolled] = useState(false);
+export default function App() {
+const [lang, setLang] = useState(“de”);
+const [tab, setTab] = useState(0);
+const [sc, setSc] = useState(false);
+const t = T[lang];
 
-useEffect(() => {
-const h = () => setScrolled(window.scrollY > 60);
-window.addEventListener(“scroll”, h);
-return () => window.removeEventListener(“scroll”, h);
-}, []);
-
-const scrollTo = (id) => {
-document.getElementById(id)?.scrollIntoView({ behavior: “smooth” });
+useEffect(() => { const h = () => setSc(window.scrollY > 40); window.addEventListener(“scroll”, h); return () => window.removeEventListener(“scroll”, h); }, []);
+const go = id => document.getElementById(id)?.scrollIntoView({ behavior: “smooth” });
+const dlF = (i) => {
+const d = [t.agb, t.priv, t.dpa][i]; const title = t.tabs[i];
+let txt = `${title}\ngoSNOB.ai · Basel\nApril 2026\n${"═".repeat(40)}\n\n`;
+d.forEach(s => { txt += `${s.t}\n${s.c}\n\n`; });
+txt += `\ngoSNOB.ai · Swiss Law · Basel\nTimothy Jordi & Jan Mironiuk\nprivacy@gosnob.ai\n`;
+const a = document.createElement(“a”); a.href = URL.createObjectURL(new Blob([txt], { type: “text/plain;charset=utf-8” })); a.download = `goSNOB_${title}_2026.txt`; a.click();
 };
 
-const downloadDoc = (name, title, items) => {
-let txt = `${title}\ngoSNOB.ai · Basel-Stadt, Schweiz\nStand: April 2026\n${"═".repeat(50)}\n\n`;
-items.forEach(s => { txt += `${s.t}\n${"-".repeat(s.t.length)}\n${s.c}\n\n`; });
-txt += `\n${"═".repeat(50)}\ngoSNOB.ai · Basel · Schweizer Recht · Gerichtsstand Basel-Stadt\nFounded by Timothy Jordi & Jan Mironiuk · Swiss Made\nKontakt: info@gosnob.ai · privacy@gosnob.ai\n`;
-const blob = new Blob([txt], { type: “text/plain;charset=utf-8” });
-const a = document.createElement(“a”); a.href = URL.createObjectURL(blob); a.download = name; a.click();
-};
+const ids = [“services”,“pricing”,“legal”,“contact”];
 
 return (
-<div style={{ background: C.bg, color: C.text, fontFamily: “‘DM Sans’,sans-serif”, minHeight: “100vh” }}>
+<div style={{ background: C.white, color: C.black, fontFamily: “‘Instrument Sans’,sans-serif”, minHeight: “100vh” }}>
+{/* NAV */}
+<nav style={{ position: “fixed”, top: 0, left: 0, right: 0, zIndex: 999, background: sc ? “rgba(255,255,255,.97)” : “transparent”, backdropFilter: sc ? “blur(16px)” : “none”, borderBottom: sc ? `1px solid ${C.border}` : “none”, transition: “all .3s”, padding: “0 32px” }}>
+<div style={{ maxWidth: 980, margin: “0 auto”, display: “flex”, justifyContent: “space-between”, alignItems: “center”, height: 60 }}>
+<span onClick={() => go(“hero”)} style={{ fontFamily: “‘IBM Plex Mono’,monospace”, fontSize: 15, letterSpacing: 5, cursor: “pointer”, color: C.black }}>g o S N O B . a i</span>
+<div style={{ display: “flex”, alignItems: “center”, gap: 4 }}>
+{[“de”,“en”,“fr”].map((l, i) => (<>
+{i > 0 && <div style={{ width: 1, height: 14, background: “#ddd” }} />}
+<button key={l} onClick={() => setLang(l)} style={{ background: “none”, border: “none”, cursor: “pointer”, fontFamily: “‘IBM Plex Mono’,monospace”, fontSize: 12, letterSpacing: 1, color: lang === l ? C.black : “#bbb”, fontWeight: lang === l ? 600 : 400, padding: “4px 6px” }}>{l.toUpperCase()}</button>
+</>))}
+<a href=“https://app.gosnob.ai/login” style={{ fontFamily: “‘IBM Plex Mono’,monospace”, fontSize: 12, color: C.black, textDecoration: “underline”, marginLeft: 20, letterSpacing: 1 }}>Sign In</a>
+</div>
+</div>
+</nav>
 
 ```
-  {/* ── NAV BAR ── */}
-  <nav style={{
-    position: "fixed", top: 0, left: 0, right: 0, zIndex: 999,
-    background: scrolled ? "rgba(0,0,0,0.95)" : "transparent",
-    backdropFilter: scrolled ? "blur(12px)" : "none",
-    borderBottom: scrolled ? `1px solid ${C.border}` : "none",
-    transition: "all .3s ease", padding: "0 24px",
-  }}>
-    <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 56 }}>
-      <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: 18, fontWeight: 700, color: C.white, letterSpacing: 2, cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-        go<span style={{ color: C.neon }}>SNOB</span>.ai
-      </span>
-      <div style={{ display: "flex", gap: 24 }}>
-        {[{id:"services",l:"Leistungen"},{id:"pricing",l:"Pricing"},{id:"legal",l:"Rechtliches"},{id:"contact",l:"Kontakt"}].map(n => (
-          <span key={n.id} onClick={() => scrollTo(n.id)} style={{
-            fontFamily: "'Oswald',sans-serif", fontSize: 11, color: C.muted,
-            letterSpacing: 2, textTransform: "uppercase", cursor: "pointer",
-            transition: "color .2s",
-          }}
-            onMouseEnter={e => e.target.style.color = C.neon}
-            onMouseLeave={e => e.target.style.color = C.muted}
-          >{n.l}</span>
-        ))}
-      </div>
-    </div>
-  </nav>
-
-  {/* ── HERO ── */}
-  <section id="hero" style={{
-    minHeight: "100vh", display: "flex", flexDirection: "column",
-    justifyContent: "center", alignItems: "center", textAlign: "center",
-    padding: "80px 24px", position: "relative",
-  }}>
-    <div style={{
-      position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)",
-      width: 500, height: 500, borderRadius: "50%",
-      background: `radial-gradient(circle, ${C.neon}06 0%, transparent 70%)`,
-      pointerEvents: "none",
-    }} />
-    <h1 style={{
-      fontFamily: "'Oswald',sans-serif", fontSize: "clamp(60px,12vw,120px)",
-      fontWeight: 700, color: C.white, letterSpacing: 6, margin: 0, lineHeight: 1,
-    }}>SNOB</h1>
-    <div style={{
-      fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: C.neon,
-      letterSpacing: 3, marginTop: 16, textTransform: "uppercase",
-    }}>goSNOB.ai · Network-Operated Brain · Basel</div>
-    <p style={{ fontSize: 20, color: C.muted, marginTop: 32, lineHeight: 1.6, fontWeight: 300 }}>
-      Kein Mensch.<br />Kein Warten.<br />Nur <span style={{ color: C.white, fontWeight: 600 }}>SNOB</span>.
+  {/* HERO */}
+  <section id="hero" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "80px 24px", position: "relative" }}>
+    <h1 style={{ fontFamily: "'Instrument Sans',sans-serif", fontSize: "clamp(72px,14vw,160px)", fontWeight: 700, color: C.black, letterSpacing: -2, margin: 0, lineHeight: .95 }}>SNOB</h1>
+    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: C.gray3, letterSpacing: 3, marginTop: 24, textTransform: "uppercase" }}>{t.hero_sub}</div>
+    <p style={{ fontSize: 22, color: C.gray3, marginTop: 48, lineHeight: 1.5, fontWeight: 300 }}>
+      {t.hero_line1}<br />{t.hero_line2}<br />{t.hero_line3} <span style={{ color: C.black, fontWeight: 600 }}>SNOB</span>.
     </p>
-    <div style={{ display: "flex", gap: 16, marginTop: 48, flexWrap: "wrap", justifyContent: "center" }}>
-      <a href="tel:0041615391399" style={{
-        padding: "14px 36px", background: C.neon, color: C.bg, textDecoration: "none",
-        fontFamily: "'Oswald',sans-serif", fontSize: 14, fontWeight: 600,
-        letterSpacing: 3, textTransform: "uppercase", display: "inline-block",
-      }}>CALL SNOB</a>
-      <button onClick={() => scrollTo("legal")} style={{
-        padding: "14px 36px", background: "transparent", color: C.neon,
-        border: `1px solid ${C.neon}`, fontFamily: "'Oswald',sans-serif",
-        fontSize: 14, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase", cursor: "pointer",
-      }}>RECHTLICHES</button>
-    </div>
-    <div style={{ marginTop: 80, fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.dim, letterSpacing: 2 }}>
-      ↓ SCROLL
-    </div>
+    <a href="tel:0041615391399" style={{ display: "inline-block", marginTop: 48, padding: "16px 44px", background: C.accent, color: C.white, textDecoration: "none", fontFamily: "'IBM Plex Mono',monospace", fontSize: 13, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase" }}>{t.call}</a>
+    <div style={{ position: "absolute", bottom: 48, fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#ccc", letterSpacing: 4 }}>{t.tap}</div>
   </section>
 
-  {/* ── SERVICES ── */}
-  <section id="services" style={{ maxWidth: 960, margin: "0 auto", padding: "100px 24px" }}>
-    <h2 style={{ fontFamily: "'Oswald',sans-serif", fontSize: 36, fontWeight: 700, color: C.white, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>
-      Leistungen
-    </h2>
-    <p style={{ color: C.muted, fontSize: 14, marginBottom: 48 }}>AI Plattform & IT Speziallösungen</p>
-    <div style={{ width: 40, height: 3, background: C.neon, marginBottom: 48 }} />
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16 }}>
-      {SERVICES.map((s, i) => (
-        <div key={i} style={{
-          background: C.card, border: `1px solid ${C.border}`, padding: 28,
-          transition: "border-color .2s",
-        }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = C.neon}
-          onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
-        >
-          <div style={{ fontSize: 24, marginBottom: 12 }}>{s.icon}</div>
-          <h3 style={{ fontFamily: "'Oswald',sans-serif", fontSize: 16, fontWeight: 600, color: C.white, letterSpacing: 1, margin: "0 0 8px" }}>{s.title}</h3>
-          <p style={{ fontSize: 13, color: C.muted, margin: 0, lineHeight: 1.6 }}>{s.desc}</p>
+  {/* SERVICES */}
+  <section id="services" style={{ maxWidth: 980, margin: "0 auto", padding: "100px 32px" }}>
+    <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 4 }}>{t.services_title}</h2>
+    <p style={{ color: C.gray3, fontSize: 14, marginBottom: 48 }}>{t.services_sub}</p>
+    <div style={{ width: 32, height: 2, background: C.accent, marginBottom: 48 }} />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 1, background: C.border }}>
+      {t.svcs.map((s, i) => (
+        <div key={i} style={{ background: C.white, padding: 32, transition: "background .2s" }} onMouseEnter={e => e.currentTarget.style.background = C.gray1} onMouseLeave={e => e.currentTarget.style.background = C.white}>
+          <div style={{ fontSize: 28, marginBottom: 16 }}>{s.i}</div>
+          <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 8px" }}>{s.t}</h3>
+          <p style={{ fontSize: 13, color: C.gray3, margin: 0, lineHeight: 1.6 }}>{s.d}</p>
         </div>
       ))}
     </div>
   </section>
 
-  {/* ── PRICING ── */}
-  <section id="pricing" style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px" }}>
-    <h2 style={{ fontFamily: "'Oswald',sans-serif", fontSize: 36, fontWeight: 700, color: C.white, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>
-      Klar.<br />Direkt.
-    </h2>
-    <div style={{ width: 40, height: 3, background: C.neon, margin: "16px 0 48px" }} />
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16 }}>
-      {PLANS.map((p, i) => (
-        <div key={i} style={{
-          background: C.card, border: `1px solid ${p.pop ? C.neon : C.border}`,
-          padding: 32, position: "relative",
-        }}>
-          <div style={{ fontFamily: "'Oswald',sans-serif", fontSize: 18, fontWeight: 600, color: C.white, letterSpacing: 2, textTransform: "uppercase" }}>{p.name}</div>
+  {/* PRICING */}
+  <section id="pricing" style={{ maxWidth: 980, margin: "0 auto", padding: "80px 32px" }}>
+    <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 4 }}>{t.pricing_title}</h2>
+    <div style={{ width: 32, height: 2, background: C.accent, margin: "16px 0 48px" }} />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))", gap: 1, background: C.border }}>
+      {t.plans.map((p, i) => (
+        <div key={i} style={{ background: C.white, padding: 36, borderTop: p.pop ? `3px solid ${C.accent}` : "none" }}>
+          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace" }}>{p.n}</div>
           <div style={{ marginTop: 20 }}>
-            <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: p.price === "AUF ANFRAGE" ? 22 : 42, fontWeight: 700, color: p.pop ? C.neon : C.white }}>
-              {p.price === "AUF ANFRAGE" ? "AUF" : p.price}
-            </span>
-            {p.price !== "AUF ANFRAGE" && <span style={{ fontSize: 13, color: C.muted, marginLeft: 6 }}>CHF / Monat</span>}
-            {p.price === "AUF ANFRAGE" && <div style={{ fontFamily: "'Oswald',sans-serif", fontSize: 22, fontWeight: 700, color: C.white }}>ANFRAGE</div>}
+            {p.p ? (<><span style={{ fontSize: 44, fontWeight: 700, color: p.pop ? C.accent : C.black }}>{p.p}</span><span style={{ fontSize: 13, color: C.gray3, marginLeft: 8 }}>{t.plan_mo}</span></>) : (<span style={{ fontSize: 22, fontWeight: 700 }}>{t.plan_ask}</span>)}
           </div>
-          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 10 }}>
-            {p.features.map((f, j) => (
-              <div key={j} style={{ fontSize: 13, color: C.text, display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: C.neon, fontSize: 8 }}>◆</span>{f}
-              </div>
-            ))}
+          <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+            {p.f.map((f, j) => (<div key={j} style={{ fontSize: 13, color: C.gray5, display: "flex", alignItems: "center", gap: 10 }}><span style={{ color: C.accent, fontSize: 7 }}>●</span>{f}</div>))}
           </div>
-          <a href="tel:0041615391399" style={{
-            display: "block", marginTop: 28, padding: "10px 0", textAlign: "center",
-            fontFamily: "'Oswald',sans-serif", fontSize: 12, letterSpacing: 2,
-            textTransform: "uppercase", textDecoration: "none",
-            color: p.pop ? C.bg : C.neon,
-            background: p.pop ? C.neon : "transparent",
-            border: p.pop ? "none" : `1px solid ${C.neon}`,
-          }}>Anfragen</a>
+          <a href="tel:0041615391399" style={{ display: "block", marginTop: 32, padding: "12px 0", textAlign: "center", fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, letterSpacing: 2, textTransform: "uppercase", textDecoration: "none", color: p.pop ? C.white : C.accent, background: p.pop ? C.accent : "transparent", border: p.pop ? "none" : `1px solid ${C.border}` }}>{t.pricing_cta}</a>
         </div>
       ))}
     </div>
-    <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.dim, marginTop: 16, letterSpacing: 1 }}>
-      Alle Preise exkl. MwSt.
-    </p>
+    <p style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: "#bbb", marginTop: 16 }}>{t.pricing_exkl}</p>
   </section>
 
-  {/* ── LEGAL ── */}
-  <section id="legal" style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px" }}>
-    <h2 style={{ fontFamily: "'Oswald',sans-serif", fontSize: 36, fontWeight: 700, color: C.white, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>
-      Rechtliches
-    </h2>
-    <p style={{ color: C.muted, fontSize: 14, marginBottom: 16 }}>Schweizer Recht · Gerichtsstand Basel-Stadt · DSG & DSGVO</p>
-    <div style={{ width: 40, height: 3, background: C.neon, marginBottom: 32 }} />
-
-    {/* Tabs */}
+  {/* LEGAL */}
+  <section id="legal" style={{ maxWidth: 980, margin: "0 auto", padding: "80px 32px" }}>
+    <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 4 }}>{t.legal_title}</h2>
+    <p style={{ color: C.gray3, fontSize: 14, marginBottom: 16 }}>{t.legal_sub}</p>
+    <div style={{ width: 32, height: 2, background: C.accent, marginBottom: 32 }} />
     <div style={{ display: "flex", gap: 0, marginBottom: 32, borderBottom: `1px solid ${C.border}` }}>
-      {[
-        { id: "agb", label: "AGB" },
-        { id: "dse", label: "Datenschutz" },
-        { id: "avv", label: "AVV" },
-      ].map(t => (
-        <button key={t.id} onClick={() => setTab(t.id)} style={{
-          padding: "12px 24px", background: "none", border: "none",
-          fontFamily: "'Oswald',sans-serif", fontSize: 13, letterSpacing: 2,
-          textTransform: "uppercase", cursor: "pointer",
-          color: tab === t.id ? C.neon : C.muted,
-          borderBottom: tab === t.id ? `2px solid ${C.neon}` : "2px solid transparent",
-          transition: "all .2s", marginBottom: -1,
-        }}>{t.label}</button>
+      {t.tabs.map((tb, i) => (
+        <button key={i} onClick={() => setTab(i)} style={{ padding: "14px 28px", background: "none", border: "none", fontFamily: "'IBM Plex Mono',monospace", fontSize: 12, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", color: tab === i ? C.accent : C.gray3, borderBottom: tab === i ? `2px solid ${C.accent}` : "2px solid transparent", marginBottom: -1, fontWeight: tab === i ? 600 : 400 }}>{tb}</button>
       ))}
     </div>
-
-    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.dim, letterSpacing: 1, marginBottom: 24 }}>
-      STAND: APRIL 2026 · goSNOB.ai · BASEL-STADT, SCHWEIZ
-    </div>
-
-    {tab === "agb" && <Acc items={AGB} />}
-    {tab === "dse" && <Acc items={DSE} />}
-    {tab === "avv" && <Acc items={AVV} />}
-
-    {/* Downloads */}
-    <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap" }}>
-      {[
-        { fn: "goSNOB_AGB_2026.txt", title: "ALLGEMEINE GESCHÄFTSBEDINGUNGEN (AGB)", data: AGB, label: "↓ AGB" },
-        { fn: "goSNOB_Datenschutz_2026.txt", title: "DATENSCHUTZERKLÄRUNG", data: DSE, label: "↓ Datenschutz" },
-        { fn: "goSNOB_AVV_2026.txt", title: "AUFTRAGSVERARBEITUNGSVERTRAG (AVV)", data: AVV, label: "↓ AVV" },
-      ].map((d, i) => (
-        <button key={i} onClick={() => downloadDoc(d.fn, d.title, d.data)} style={{
-          padding: "10px 20px", background: "transparent", color: C.neon,
-          border: `1px solid ${C.border}`, fontFamily: "'JetBrains Mono',monospace",
-          fontSize: 10, letterSpacing: 1, cursor: "pointer", textTransform: "uppercase",
-          transition: "border-color .2s",
-        }}
-          onMouseEnter={e => e.target.style.borderColor = C.neon}
-          onMouseLeave={e => e.target.style.borderColor = C.border}
-        >{d.label}</button>
+    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: "#bbb", letterSpacing: 1, marginBottom: 28 }}>{t.legal_date}</div>
+    {tab === 0 && <Acc items={t.agb} />}
+    {tab === 1 && <Acc items={t.priv} />}
+    {tab === 2 && <Acc items={t.dpa} />}
+    <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap" }}>
+      {t.dl.map((label, i) => (
+        <button key={i} onClick={() => dlF(i)} style={{ padding: "10px 22px", background: "transparent", color: C.accent, border: `1px solid ${C.border}`, fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase", transition: "border-color .2s" }}
+          onMouseEnter={e => e.target.style.borderColor = C.accent} onMouseLeave={e => e.target.style.borderColor = C.border}
+        >{label}</button>
       ))}
     </div>
   </section>
 
-  {/* ── CTA ── */}
-  <section id="contact" style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
-    <p style={{ fontFamily: "'Oswald',sans-serif", fontSize: 28, fontWeight: 700, color: C.white, letterSpacing: 2, lineHeight: 1.4 }}>
-      Kein Sales-Pitch.<br />Ruf SNOB an.<br />Sag was du brauchst.
-    </p>
-    <a href="tel:0041615391399" style={{
-      display: "inline-block", marginTop: 32, fontFamily: "'Oswald',sans-serif",
-      fontSize: 28, fontWeight: 700, color: C.neon, textDecoration: "none",
-      letterSpacing: 3, borderBottom: `2px solid ${C.neon}`, paddingBottom: 4,
-    }}>+41 61 539 13 99</a>
-    <p style={{ fontSize: 13, color: C.dim, marginTop: 16 }}>
-      Wir glauben nicht an E-Mail-Spam. Melde dich — wir wissen wer du bist.
-    </p>
+  {/* CTA */}
+  <section id="contact" style={{ maxWidth: 980, margin: "0 auto", padding: "100px 32px", textAlign: "center" }}>
+    <p style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.5 }}>{t.cta1}<br />{t.cta2}<br />{t.cta3}</p>
+    <a href="tel:0041615391399" style={{ display: "inline-block", marginTop: 36, fontFamily: "'IBM Plex Mono',monospace", fontSize: 28, fontWeight: 600, color: C.accent, textDecoration: "none", borderBottom: `2px solid ${C.accent}`, paddingBottom: 4, letterSpacing: 2 }}>+41 61 539 13 99</a>
+    <p style={{ fontSize: 13, color: "#bbb", marginTop: 20 }}>{t.cta_sub}</p>
   </section>
 
-  {/* ── IMPRESSUM ── */}
-  <section style={{ maxWidth: 960, margin: "0 auto", padding: "40px 24px", borderTop: `1px solid ${C.border}` }}>
-    <div style={{ fontFamily: "'Oswald',sans-serif", fontSize: 11, color: C.neon, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Impressum</div>
-    <p style={{ fontSize: 12, color: C.muted, lineHeight: 2 }}>
-      goSNOB.ai · Basel-Stadt, Schweiz · Gerichtsstand: Basel-Stadt · Schweizer Recht · Datenschutz-Aufsicht: EDÖB, Feldeggweg 1, 3003 Bern · EU-ODR: https://ec.europa.eu/consumers/odr · Kontakt: info@gosnob.ai · privacy@gosnob.ai · legal@gosnob.ai
-    </p>
+  {/* IMPRESSUM */}
+  <section style={{ maxWidth: 980, margin: "0 auto", padding: "40px 32px", borderTop: `1px solid ${C.border}` }}>
+    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: C.accent, letterSpacing: 2, marginBottom: 14, textTransform: "uppercase" }}>{t.impressum}</div>
+    <p style={{ fontSize: 12, color: C.gray3, lineHeight: 2.2 }}>goSNOB.ai · Basel-Stadt, Schweiz · Gerichtsstand: Basel-Stadt · Schweizer Recht · EDÖB, Feldeggweg 1, 3003 Bern · EU-ODR: ec.europa.eu/consumers/odr · info@gosnob.ai · privacy@gosnob.ai</p>
   </section>
 
-  {/* ── FOOTER ── */}
-  <footer style={{
-    maxWidth: 960, margin: "0 auto", padding: "32px 24px 48px",
-    borderTop: `1px solid ${C.border}`, textAlign: "center",
-  }}>
-    <div style={{ fontFamily: "'Oswald',sans-serif", fontSize: 14, color: C.white, letterSpacing: 2, marginBottom: 16 }}>
-      go<span style={{ color: C.neon }}>SNOB</span>.ai
-    </div>
-    <div style={{ display: "flex", justifyContent: "center", gap: 24, marginBottom: 24 }}>
-      {["Datenschutz", "AGB", "Impressum"].map((l, i) => (
-        <span key={i} onClick={() => scrollTo("legal")} style={{
-          fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.muted,
-          letterSpacing: 1, cursor: "pointer", textTransform: "uppercase",
-        }}>{l}</span>
+  {/* FOOTER */}
+  <footer style={{ maxWidth: 980, margin: "0 auto", padding: "32px 32px 56px", borderTop: `1px solid ${C.border}`, textAlign: "center" }}>
+    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 14, letterSpacing: 5, marginBottom: 20 }}>g o <span style={{ color: C.accent }}>S N O B</span> . a i</div>
+    <div style={{ display: "flex", justifyContent: "center", gap: 28, marginBottom: 24 }}>
+      {[t.tabs[1], t.tabs[0], t.impressum].map((l, i) => (
+        <span key={i} onClick={() => go("legal")} style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: C.gray3, letterSpacing: 1, cursor: "pointer", textTransform: "uppercase", textDecoration: "underline", textUnderlineOffset: 3 }}>{l}</span>
       ))}
     </div>
-    <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.dim, lineHeight: 2, letterSpacing: 0.5 }}>
-      © 2026 goSNOB.ai · Basel<br />
-      Founded by Timothy Jordi & Jan Mironiuk · Swiss Made<br />
-      Programmiert von Insomnia · Basel
-    </p>
+    <p style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: "#bbb", lineHeight: 2.2 }}>{t.fc}<br />{t.ff}<br />{t.fd}</p>
   </footer>
 
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { background:#000; }
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-track { background:#000; }
-    ::-webkit-scrollbar-thumb { background:#222; border-radius:2px; }
-    ::selection { background:${C.neon}; color:#000; }
-    a:hover { opacity:0.85; }
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#fff}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:#fff}
+    ::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+    ::selection{background:${C.accent};color:#fff}
   `}</style>
 </div>
 ```
