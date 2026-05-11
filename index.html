@@ -6,977 +6,889 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>goSNOB.ai — Legal Hub</title>
 <style>
-/* ── RESET ─────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
-/* ── CSS VARS ──────────────────────────────────── */
-:root{
-–pink:#d946ef;
-–pink-dark:#a21caf;
-–black:#000000;
-–white:#ffffff;
-–gray:#888888;
-–gray-light:#e8e8e8;
-–dark:#111111;
-–font-display:‘Bebas Neue’,Impact,‘Arial Narrow’,Arial,sans-serif;
-–font-mono:‘DM Mono’,‘Courier New’,Courier,monospace;
-}
-
-/* ── BASE ──────────────────────────────────────── */
 body{
-background:var(–white);
-color:var(–black);
-font-family:var(–font-mono);
+background:#fff;
+color:#000;
+font-family:‘Courier New’,Courier,monospace;
 font-size:14px;
 cursor:crosshair;
 overflow-x:hidden;
-position:relative;
 }
-a{color:inherit;text-decoration:none;cursor:crosshair}
-button{cursor:crosshair;border:none;background:none;font-family:var(–font-mono);font-size:14px}
+button{cursor:crosshair;font-family:‘Courier New’,Courier,monospace}
+a{cursor:crosshair;color:inherit;text-decoration:none}
 
-/* ── INTRO ─────────────────────────────────────── */
+/* ── INTRO ─────────────────────────────── */
 #intro{
 position:fixed;
-top:0;left:0;right:0;bottom:0;
-background:var(–black);
+inset:0;
+background:#000;
 z-index:9999;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-flex-direction:column;
-gap:8px;
+gap:16px;
 }
-#intro-word{
-font-family:var(–font-display);
-font-size:clamp(48px,10vw,100px);
-color:var(–white);
-letter-spacing:0.1em;
-opacity:0;
-transform:translateY(20px);
-animation:introSlide 0.6s ease 0.3s forwards;
+#intro h1{
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:clamp(48px,10vw,96px);
+color:#fff;
+letter-spacing:0.08em;
+line-height:1;
+animation:iSlide 0.7s cubic-bezier(0.22,1,0.36,1) 0.2s both;
 }
-#intro-sub{
-font-family:var(–font-mono);
-font-size:12px;
+#intro p{
+font-family:‘Courier New’,monospace;
+font-size:11px;
 letter-spacing:0.3em;
-color:var(–pink);
+color:#d946ef;
 text-transform:uppercase;
-opacity:0;
-animation:introSlide 0.6s ease 0.7s forwards;
+animation:iSlide 0.7s cubic-bezier(0.22,1,0.36,1) 0.5s both;
 }
-#intro-bar{
+#intro-line{
 width:0;
 height:2px;
-background:var(–pink);
-margin-top:16px;
-animation:introBar 1.2s ease 0.4s forwards;
+background:#d946ef;
+animation:iLine 1s ease 0.4s forwards;
 }
-@keyframes introSlide{
-to{opacity:1;transform:translateY(0)}
-}
-@keyframes introBar{
-to{width:180px}
-}
-#intro.done{
-opacity:0;
-pointer-events:none;
-transition:opacity 0.5s ease;
-}
+@keyframes iSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes iLine{to{width:160px}}
 
-/* ── NAV ───────────────────────────────────────── */
-#main-content{
-position:relative;
-z-index:1;
-}
+/* ── NAV ───────────────────────────────── */
 nav{
 position:sticky;
 top:0;
-z-index:100;
-background:var(–white);
-border-bottom:2px solid var(–gray-light);
+z-index:500;
+background:#fff;
+border-bottom:1px solid #e0e0e0;
 display:flex;
 align-items:center;
 justify-content:space-between;
 padding:0 40px;
 height:56px;
 }
-.nav-logo{
-font-family:var(–font-display);
-font-size:22px;
-letter-spacing:0.06em;
-color:var(–black);
+.logo{
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:20px;
+letter-spacing:0.05em;
+color:#000;
 line-height:1;
 }
-.nav-logo-pink{color:var(–pink)}
-.lang-switcher{
-display:flex;
-border:1px solid var(–gray-light);
-}
+.logo em{color:#d946ef;font-style:normal}
+.langs{display:flex}
 .lang-btn{
-padding:8px 16px;
-font-family:var(–font-mono);
+padding:8px 14px;
+font-family:‘Courier New’,monospace;
 font-size:11px;
-font-weight:500;
+font-weight:700;
 letter-spacing:0.15em;
-color:var(–gray);
-border-right:1px solid var(–gray-light);
-transition:all 0.15s;
+color:#888;
+border:1px solid #e0e0e0;
+border-right:none;
+background:#fff;
 cursor:crosshair;
-background:var(–white);
-text-transform:uppercase;
+transition:background 0.1s,color 0.1s;
 line-height:1;
 }
-.lang-btn:last-child{border-right:none}
-.lang-btn.active{
-background:var(–pink);
-color:var(–white);
-}
-.lang-btn:hover:not(.active){
-background:var(–black);
-color:var(–white);
-}
+.lang-btn:last-child{border-right:1px solid #e0e0e0}
+.lang-btn.on{background:#d946ef;color:#fff;border-color:#d946ef}
+.lang-btn:hover:not(.on){background:#000;color:#fff;border-color:#000}
 
-/* ── HERO ──────────────────────────────────────── */
+/* ── HERO ──────────────────────────────── */
 .hero{
-position:relative;
-padding:80px 40px 64px;
-border-bottom:1px solid var(–gray-light);
-overflow:hidden;
+padding:72px 40px 56px;
+border-bottom:1px solid #e0e0e0;
 }
-.hero-label{
-font-family:var(–font-mono);
+.hero-tag{
+font-family:‘Courier New’,monospace;
 font-size:10px;
 letter-spacing:0.25em;
-color:var(–pink);
+color:#d946ef;
 text-transform:uppercase;
-margin-bottom:20px;
 display:block;
+margin-bottom:20px;
 }
 .hero-title{
-font-family:var(–font-display);
-font-size:clamp(64px,12vw,140px);
-line-height:0.88;
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:clamp(72px,13vw,148px);
+line-height:0.86;
 letter-spacing:0.02em;
-color:var(–black);
-margin-bottom:32px;
-position:relative;
-z-index:2;
+color:#000;
+margin-bottom:36px;
 }
-.hero-title-pink{color:var(–pink)}
-.hero-sub{
-font-family:var(–font-mono);
-font-size:13px;
-color:var(–gray);
-max-width:420px;
-line-height:1.8;
-position:relative;
-z-index:2;
-}
+.hero-title em{color:#d946ef;font-style:normal}
 .hero-rule{
-width:48px;
+width:40px;
 height:3px;
-background:var(–pink);
-margin:28px 0;
+background:#d946ef;
+margin-bottom:24px;
 }
-.hero-meta{
-display:flex;
-gap:48px;
-flex-wrap:wrap;
-position:relative;
-z-index:2;
+.hero-sub{
+font-family:‘Courier New’,monospace;
+font-size:13px;
+color:#555;
+max-width:400px;
+line-height:1.9;
+margin-bottom:40px;
 }
-.hero-meta-item{display:flex;flex-direction:column;gap:6px}
-.hero-meta-label{
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap}
+.meta-item{display:flex;flex-direction:column;gap:5px}
+.meta-label{
 font-size:9px;
-letter-spacing:0.2em;
-color:var(–gray);
+letter-spacing:0.22em;
+color:#aaa;
 text-transform:uppercase;
 }
-.hero-meta-value{
+.meta-val{
 font-size:13px;
-font-weight:500;
-color:var(–black);
+font-weight:700;
+color:#000;
 letter-spacing:0.03em;
 }
 
-/* ── DOC GRID ──────────────────────────────────── */
-.docs-grid{
+/* ── CARDS ─────────────────────────────── */
+.cards{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-border-top:1px solid var(–gray-light);
-border-left:1px solid var(–gray-light);
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+border-left:1px solid #e0e0e0;
+border-top:1px solid #e0e0e0;
 }
-.doc-card{
-border-right:1px solid var(–gray-light);
-border-bottom:1px solid var(–gray-light);
-padding:28px 28px 24px;
-transition:background 0.12s,border-left 0.12s;
+.card{
+border-right:1px solid #e0e0e0;
+border-bottom:1px solid #e0e0e0;
+padding:28px 24px 22px;
 cursor:crosshair;
+transition:background 0.12s;
 position:relative;
+overflow:hidden;
 }
-.doc-card::before{
+.card::before{
 content:’’;
 position:absolute;
 left:0;top:0;bottom:0;
 width:0;
-background:var(–pink);
+background:#d946ef;
 transition:width 0.12s;
 }
-.doc-card:hover::before,
-.doc-card.active::before{
-width:3px;
-}
-.doc-card:hover{background:#fdf4ff}
-.doc-card.active{background:#fdf4ff}
-.doc-num{
+.card:hover{background:#fdf4ff}
+.card:hover::before,.card.on::before{width:3px}
+.card.on{background:#fdf4ff}
+.card-num{
 font-size:9px;
 letter-spacing:0.2em;
-color:var(–pink);
+color:#d946ef;
+font-weight:700;
 margin-bottom:12px;
-font-weight:500;
 text-transform:uppercase;
 }
-.doc-title{
-font-family:var(–font-display);
-font-size:20px;
-letter-spacing:0.04em;
-color:var(–black);
+.card-title{
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:19px;
+letter-spacing:0.03em;
+color:#000;
 margin-bottom:10px;
 line-height:1.1;
 }
-.doc-desc{
+.card-desc{
 font-size:11px;
-color:var(–gray);
+color:#888;
 line-height:1.7;
 margin-bottom:18px;
 }
-.doc-badge{
-display:inline-block;
-padding:3px 10px;
-border:1px solid var(–gray-light);
+.card-tag{
 font-size:9px;
 letter-spacing:0.12em;
-color:var(–gray);
+color:#aaa;
 text-transform:uppercase;
+border:1px solid #e0e0e0;
+padding:3px 9px;
+display:inline-block;
 }
 
-/* ── CONTENT PANELS ────────────────────────────── */
-.content-panel{
+/* ── PANEL ─────────────────────────────── */
+.panel{
 display:none;
-padding:56px 40px;
-border-bottom:1px solid var(–gray-light);
-background:var(–white);
-animation:panelIn 0.25s ease;
+border-bottom:1px solid #e0e0e0;
+background:#fff;
+animation:pIn 0.2s ease;
 }
-.content-panel.active{display:block}
-@keyframes panelIn{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:none}
-}
-.panel-header{
+.panel.on{display:block}
+@keyframes pIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel-inner{padding:52px 40px}
+.panel-head{
 display:flex;
 justify-content:space-between;
 align-items:flex-start;
-margin-bottom:40px;
 flex-wrap:wrap;
 gap:16px;
 padding-bottom:24px;
-border-bottom:1px solid var(–gray-light);
+border-bottom:1px solid #e0e0e0;
+margin-bottom:40px;
 }
 .panel-title{
-font-family:var(–font-display);
-font-size:clamp(36px,5vw,72px);
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:clamp(32px,5vw,68px);
 letter-spacing:0.03em;
+color:#000;
 line-height:1;
-color:var(–black);
 }
-.panel-actions{
-display:flex;
-gap:10px;
-align-items:center;
-flex-wrap:wrap;
-}
+.panel-acts{display:flex;gap:10px;align-items:center}
 .btn-dl{
-display:flex;
+display:inline-flex;
 align-items:center;
 gap:8px;
-padding:12px 24px;
-background:var(–pink);
-color:var(–white);
-font-family:var(–font-mono);
+padding:11px 22px;
+background:#d946ef;
+color:#fff;
+font-family:‘Courier New’,monospace;
 font-size:11px;
-font-weight:500;
+font-weight:700;
 letter-spacing:0.12em;
 text-transform:uppercase;
-transition:background 0.15s;
-cursor:crosshair;
 border:none;
+cursor:crosshair;
+transition:background 0.12s;
 white-space:nowrap;
 }
-.btn-dl:hover{background:var(–pink-dark)}
-.btn-close{
-width:44px;
-height:44px;
-border:1px solid var(–gray-light);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:16px;
-color:var(–gray);
-transition:all 0.15s;
+.btn-dl:hover{background:#a21caf}
+.btn-x{
+width:42px;height:42px;
+border:1px solid #e0e0e0;
+background:#fff;
+font-size:15px;
+color:#888;
+display:flex;align-items:center;justify-content:center;
 cursor:crosshair;
-background:var(–white);
 flex-shrink:0;
+transition:background 0.12s,color 0.12s;
 }
-.btn-close:hover{background:var(–black);color:var(–white);border-color:var(–black)}
+.btn-x:hover{background:#000;color:#fff;border-color:#000}
 
-/* ── LEGAL CONTENT ─────────────────────────────── */
-.legal-body{max-width:720px}
-.legal-sec{margin-bottom:36px}
-.legal-sec-title{
-font-family:var(–font-mono);
-font-size:10px;
-letter-spacing:0.2em;
-color:var(–pink);
+/* ── LEGAL BODY ────────────────────────── */
+.legal{max-width:680px}
+.lsec{margin-bottom:32px}
+.lsec-h{
+font-family:‘Courier New’,monospace;
+font-size:9px;
+letter-spacing:0.22em;
+color:#d946ef;
 text-transform:uppercase;
-font-weight:500;
-margin-bottom:10px;
+font-weight:700;
 padding-bottom:8px;
-border-bottom:1px solid var(–gray-light);
+border-bottom:1px solid #f0f0f0;
+margin-bottom:10px;
 }
-.legal-sec-sub{
-font-family:var(–font-mono);
-font-size:12px;
-font-weight:500;
-color:var(–black);
-margin:14px 0 6px;
-letter-spacing:0.05em;
+.lsec-sub{
+font-size:11px;
+font-weight:700;
+color:#000;
+letter-spacing:0.06em;
+margin:12px 0 6px;
+text-transform:uppercase;
+font-family:‘Courier New’,monospace;
 }
-.legal-p{
+.lp{
 font-size:13px;
 color:#333;
 line-height:1.9;
-margin-bottom:10px;
+margin-bottom:8px;
 }
-.legal-ul{
-list-style:none;
-padding:0;
-margin:6px 0 12px;
-}
-.legal-ul li{
+.lul{list-style:none;margin:6px 0 10px;padding:0}
+.lul li{
 font-size:12px;
 color:#444;
-line-height:1.7;
-padding:3px 0 3px 20px;
+line-height:1.75;
+padding:3px 0 3px 18px;
 position:relative;
 }
-.legal-ul li::before{
+.lul li::before{
 content:’—’;
 position:absolute;
 left:0;
-color:var(–pink);
-font-size:11px;
+color:#d946ef;
+font-size:10px;
+top:4px;
 }
-.legal-note{
-border-left:3px solid var(–pink);
+.lnote{
+border-left:3px solid #d946ef;
 background:#fdf4ff;
-padding:14px 18px;
-margin:14px 0;
+padding:12px 16px;
+margin:12px 0;
 }
-.legal-note p{
-font-size:11px;
-color:#555;
-line-height:1.7;
-margin:0;
-letter-spacing:0.02em;
-}
+.lnote p{font-size:11px;color:#555;line-height:1.75;margin:0;letter-spacing:0.02em}
 
-/* ── DOWNLOAD ALL ──────────────────────────────── */
+/* ── DL ALL ────────────────────────────── */
 .dl-all{
-background:var(–black);
-padding:56px 40px;
+background:#000;
+padding:52px 40px;
 display:flex;
 align-items:center;
 justify-content:space-between;
 flex-wrap:wrap;
 gap:24px;
-border-top:3px solid var(–pink);
+border-top:3px solid #d946ef;
 }
-.dl-all-text h2{
-font-family:var(–font-display);
-font-size:clamp(28px,4vw,56px);
-color:var(–white);
+.dl-all h2{
+font-family:Impact,‘Arial Narrow’,Arial,sans-serif;
+font-size:clamp(28px,5vw,56px);
+color:#fff;
 letter-spacing:0.04em;
 line-height:1;
 margin-bottom:8px;
 }
-.dl-all-text p{
-font-size:12px;
-color:#666;
-letter-spacing:0.05em;
-}
+.dl-all p{font-size:12px;color:#555;letter-spacing:0.05em;font-family:‘Courier New’,monospace}
 .btn-dl-all{
-display:flex;
+display:inline-flex;
 align-items:center;
 gap:10px;
-padding:16px 36px;
-background:var(–pink);
-color:var(–white);
-font-family:var(–font-mono);
+padding:15px 34px;
+background:#d946ef;
+color:#fff;
+font-family:‘Courier New’,monospace;
 font-size:12px;
-font-weight:500;
+font-weight:700;
 letter-spacing:0.15em;
 text-transform:uppercase;
-transition:background 0.15s;
-cursor:crosshair;
 border:none;
+cursor:crosshair;
+transition:background 0.12s;
 white-space:nowrap;
 }
-.btn-dl-all:hover{background:var(–pink-dark)}
+.btn-dl-all:hover{background:#a21caf}
 
-/* ── CI STAMP ──────────────────────────────────── */
-.ci-strip{
-padding:24px 40px;
-border-top:1px solid var(–gray-light);
+/* ── CI STRIP ──────────────────────────── */
+.ci{
+padding:22px 40px;
+border-top:1px solid #e0e0e0;
 display:flex;
 align-items:center;
 justify-content:space-between;
 flex-wrap:wrap;
 gap:16px;
 }
-.ci-stamp{
-display:flex;
-align-items:center;
-gap:12px;
-}
-.ci-dot{
-width:6px;
-height:6px;
-background:var(–pink);
-border-radius:50%;
-flex-shrink:0;
-}
+.ci-stamp{display:flex;align-items:center;gap:12px}
+.ci-dot{width:6px;height:6px;background:#d946ef;border-radius:50%;flex-shrink:0}
 .ci-text{
-font-family:var(–font-mono);
+font-family:‘Courier New’,monospace;
 font-size:10px;
-letter-spacing:0.15em;
-color:var(–gray);
+letter-spacing:0.14em;
+color:#aaa;
 text-transform:uppercase;
 }
-.ci-text b{color:var(–black);font-weight:500}
+.ci-text b{color:#000;font-weight:700}
 .btn-ci{
-padding:8px 18px;
-border:1px solid var(–gray-light);
-font-family:var(–font-mono);
+padding:7px 16px;
+border:1px solid #e0e0e0;
+background:#fff;
+font-family:‘Courier New’,monospace;
 font-size:10px;
-letter-spacing:0.12em;
-color:var(–gray);
+letter-spacing:0.1em;
+color:#888;
 text-transform:uppercase;
-transition:all 0.15s;
 cursor:crosshair;
-background:var(–white);
+transition:border-color 0.12s,color 0.12s;
 white-space:nowrap;
 }
-.btn-ci:hover{border-color:var(–pink);color:var(–pink)}
+.btn-ci:hover{border-color:#d946ef;color:#d946ef}
 
-/* ── FOOTER ────────────────────────────────────── */
+/* ── FOOTER ────────────────────────────── */
 footer{
-padding:20px 40px;
-border-top:1px solid var(–gray-light);
+padding:18px 40px;
+border-top:1px solid #e0e0e0;
 display:flex;
 justify-content:space-between;
 align-items:center;
 flex-wrap:wrap;
-gap:12px;
+gap:10px;
 }
-.footer-l{
-font-family:var(–font-mono);
-font-size:10px;
-color:var(–gray);
-letter-spacing:0.08em;
-}
-.footer-l b{color:var(–black)}
-.footer-r{
-font-family:var(–font-mono);
-font-size:10px;
-color:var(–gray);
-letter-spacing:0.12em;
-text-transform:uppercase;
-}
-.footer-r span{color:var(–pink)}
+.fl{font-family:‘Courier New’,monospace;font-size:10px;color:#aaa;letter-spacing:0.06em}
+.fl b{color:#000}
+.fr{font-family:‘Courier New’,monospace;font-size:10px;color:#aaa;letter-spacing:0.1em;text-transform:uppercase}
+.fr span{color:#d946ef}
 
-/* ── RESPONSIVE ────────────────────────────────── */
-@media(max-width:640px){
-nav{padding:0 20px}
-.hero{padding:48px 20px 40px}
+/* ── RESPONSIVE ────────────────────────── */
+@media(max-width:600px){
+nav,.hero,.panel-inner,.dl-all,.ci,footer{padding-left:20px;padding-right:20px}
+.hero-title{font-size:clamp(56px,18vw,100px)}
 .hero-meta{gap:24px}
-.docs-grid{grid-template-columns:1fr 1fr}
-.content-panel{padding:36px 20px}
-.dl-all{padding:40px 20px}
-.ci-strip,.footer{padding:20px}
-.hero-title{font-size:clamp(56px,16vw,100px)}
+.cards{grid-template-columns:1fr 1fr}
 }
-@media(max-width:400px){
-.docs-grid{grid-template-columns:1fr}
+@media(max-width:380px){
+.cards{grid-template-columns:1fr}
 }
 </style>
 
 </head>
 <body>
 
-<!-- ── INTRO ──────────────────────────────────── -->
+<!-- INTRO -->
 
-<div id="intro">
-  <div id="intro-word">LEGAL HUB</div>
-  <div id="intro-sub">goSNOB.ai — Basel, CH</div>
-  <div id="intro-bar"></div>
+<div id="intro" aria-hidden="true">
+  <h1>LEGAL HUB</h1>
+  <div id="intro-line"></div>
+  <p>goSNOB.ai — Basel, CH</p>
 </div>
 
-<!-- ── MAIN ──────────────────────────────────── -->
+<!-- NAV -->
 
-<div id="main-content">
+<nav>
+  <div class="logo">go<em>S.N.O.B.</em>ai</div>
+  <div class="langs">
+    <button class="lang-btn on" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
 
-  <!-- NAV -->
+<!-- HERO -->
 
-  <nav>
-    <div class="nav-logo">go<span class="nav-logo-pink">S.N.O.B.</span>ai</div>
-    <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('de')">DE</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+<section class="hero">
+  <span class="hero-tag" id="t-hero-tag">Rechtsdokumente</span>
+  <h1 class="hero-title">LEGAL<br><em>HUB</em></h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub" id="t-hero-sub">Alle rechtlichen Grundlagen für die Nutzung der SNOB-Plattform. Transparent, klar, auf Schweizer Recht basierend.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label" id="t-m1">Anwendbares Recht</span>
+      <span class="meta-val">Schweizer Recht (revDSG/OR)</span>
     </div>
-  </nav>
+    <div class="meta-item">
+      <span class="meta-label" id="t-m2">Gerichtsstand</span>
+      <span class="meta-val">Basel-Stadt, CH</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label" id="t-m3">Stand</span>
+      <span class="meta-val">April 2026</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label" id="t-m4">Kontakt</span>
+      <span class="meta-val">team@gosnob.com</span>
+    </div>
+  </div>
+</section>
 
-  <!-- HERO -->
+<!-- CARDS -->
 
-  <section class="hero">
-    <span class="hero-label" data-k="hero_label">Rechtsdokumente</span>
-    <h1 class="hero-title">LEGAL<br><span class="hero-title-pink">HUB</span></h1>
-    <p class="hero-sub" data-k="hero_sub">Alle rechtlichen Grundlagen für die Nutzung der SNOB-Plattform. Transparent, klar, auf Schweizer Recht basierend.</p>
-    <div class="hero-rule"></div>
-    <div class="hero-meta">
-      <div class="hero-meta-item">
-        <span class="hero-meta-label" data-k="m_law">Anwendbares Recht</span>
-        <span class="hero-meta-value">Schweizer Recht (revDSG/OR)</span>
+<div class="cards">
+  <div class="card" id="card-privacy" onclick="toggleDoc('privacy')">
+    <div class="card-num">01 / 05</div>
+    <div class="card-title" id="t-c1t">Datenschutzerklärung</div>
+    <div class="card-desc" id="t-c1d">Wie wir Ihre Daten erfassen, verarbeiten und schützen. revDSG + GDPR konform.</div>
+    <div class="card-tag">Privacy Policy</div>
+  </div>
+  <div class="card" id="card-agb" onclick="toggleDoc('agb')">
+    <div class="card-num">02 / 05</div>
+    <div class="card-title" id="t-c2t">AGB</div>
+    <div class="card-desc" id="t-c2d">Allgemeine Geschäftsbedingungen für die Nutzung der SNOB-Plattform.</div>
+    <div class="card-tag">Terms & Conditions</div>
+  </div>
+  <div class="card" id="card-dpa" onclick="toggleDoc('dpa')">
+    <div class="card-num">03 / 05</div>
+    <div class="card-title" id="t-c3t">Auftragsverarbeitung</div>
+    <div class="card-desc" id="t-c3d">Datenverarbeitungsvertrag (AVV/DPA) für Partner und Kunden.</div>
+    <div class="card-tag">DPA / AVV</div>
+  </div>
+  <div class="card" id="card-partner" onclick="toggleDoc('partner')">
+    <div class="card-num">04 / 05</div>
+    <div class="card-title" id="t-c4t">Partnervertrag</div>
+    <div class="card-desc" id="t-c4d">Rahmenvertrag für Software- und Web-App-Kooperationen mit SNOB.</div>
+    <div class="card-tag">Partner Agreement</div>
+  </div>
+  <div class="card" id="card-cookie" onclick="toggleDoc('cookie')">
+    <div class="card-num">05 / 05</div>
+    <div class="card-title" id="t-c5t">Cookie Policy</div>
+    <div class="card-desc" id="t-c5d">Cookies, Tracking und Ihre Wahlmöglichkeiten auf gosnob.ai.</div>
+    <div class="card-tag">Cookies & Tracking</div>
+  </div>
+</div>
+
+<!-- PANELS -->
+
+<div id="panel-privacy" class="panel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div class="panel-title" id="pt-privacy">Datenschutzerklärung</div>
+      <div class="panel-acts">
+        <button class="btn-dl" onclick="dlDoc('privacy')">↓ <span id="t-dl">Download .docx</span></button>
+        <button class="btn-x" onclick="closeDoc('privacy')">✕</button>
       </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label" data-k="m_court">Gerichtsstand</span>
-        <span class="hero-meta-value">Basel-Stadt, CH</span>
+    </div>
+    <div class="legal" id="body-privacy"></div>
+  </div>
+</div>
+
+<div id="panel-agb" class="panel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div class="panel-title" id="pt-agb">AGB</div>
+      <div class="panel-acts">
+        <button class="btn-dl" onclick="dlDoc('agb')">↓ <span class="t-dl">Download .docx</span></button>
+        <button class="btn-x" onclick="closeDoc('agb')">✕</button>
       </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label" data-k="m_date">Stand</span>
-        <span class="hero-meta-value">April 2026</span>
+    </div>
+    <div class="legal" id="body-agb"></div>
+  </div>
+</div>
+
+<div id="panel-dpa" class="panel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div class="panel-title" id="pt-dpa">Auftragsverarbeitung</div>
+      <div class="panel-acts">
+        <button class="btn-dl" onclick="dlDoc('dpa')">↓ <span class="t-dl">Download .docx</span></button>
+        <button class="btn-x" onclick="closeDoc('dpa')">✕</button>
       </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label" data-k="m_contact">Kontakt</span>
-        <span class="hero-meta-value">team@gosnob.com</span>
+    </div>
+    <div class="legal" id="body-dpa"></div>
+  </div>
+</div>
+
+<div id="panel-partner" class="panel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div class="panel-title" id="pt-partner">Partnervertrag</div>
+      <div class="panel-acts">
+        <button class="btn-dl" onclick="dlDoc('partner')">↓ <span class="t-dl">Download .docx</span></button>
+        <button class="btn-x" onclick="closeDoc('partner')">✕</button>
       </div>
     </div>
-  </section>
-
-  <!-- DOC CARDS -->
-
-  <div class="docs-grid">
-    <div class="doc-card" id="card-privacy" onclick="toggleDoc('privacy')">
-      <div class="doc-num">01 / 05</div>
-      <div class="doc-title" data-k="d1t">Datenschutzerklärung</div>
-      <div class="doc-desc" data-k="d1d">Wie wir Ihre Daten erfassen, verarbeiten und schützen. revDSG + GDPR konform.</div>
-      <div class="doc-badge">Privacy Policy</div>
-    </div>
-    <div class="doc-card" id="card-agb" onclick="toggleDoc('agb')">
-      <div class="doc-num">02 / 05</div>
-      <div class="doc-title" data-k="d2t">AGB</div>
-      <div class="doc-desc" data-k="d2d">Allgemeine Geschäftsbedingungen für die Nutzung der SNOB-Plattform.</div>
-      <div class="doc-badge">Terms & Conditions</div>
-    </div>
-    <div class="doc-card" id="card-dpa" onclick="toggleDoc('dpa')">
-      <div class="doc-num">03 / 05</div>
-      <div class="doc-title" data-k="d3t">Auftragsverarbeitung</div>
-      <div class="doc-desc" data-k="d3d">Datenverarbeitungsvertrag (AVV/DPA) für Partner und Kunden.</div>
-      <div class="doc-badge">DPA / AVV</div>
-    </div>
-    <div class="doc-card" id="card-partner" onclick="toggleDoc('partner')">
-      <div class="doc-num">04 / 05</div>
-      <div class="doc-title" data-k="d4t">Partnervertrag</div>
-      <div class="doc-desc" data-k="d4d">Rahmenvertrag für Software- und Web-App-Kooperationen mit SNOB.</div>
-      <div class="doc-badge">Partner Agreement</div>
-    </div>
-    <div class="doc-card" id="card-cookie" onclick="toggleDoc('cookie')">
-      <div class="doc-num">05 / 05</div>
-      <div class="doc-title" data-k="d5t">Cookie Policy</div>
-      <div class="doc-desc" data-k="d5d">Cookies, Tracking und Ihre Wahlmöglichkeiten auf gosnob.ai.</div>
-      <div class="doc-badge">Cookies & Tracking</div>
-    </div>
+    <div class="legal" id="body-partner"></div>
   </div>
-
-  <!-- PANELS -->
-
-  <div id="panels">
-
-```
-<div class="content-panel" id="panel-privacy">
-  <div class="panel-header">
-    <h2 class="panel-title" id="ptitle-privacy"></h2>
-    <div class="panel-actions">
-      <button class="btn-dl" onclick="dlDoc('privacy')">↓ <span data-k="dl_btn">Download .docx</span></button>
-      <button class="btn-close" onclick="closeDoc('privacy')" aria-label="Schliessen">✕</button>
-    </div>
-  </div>
-  <div class="legal-body" id="body-privacy"></div>
 </div>
 
-<div class="content-panel" id="panel-agb">
-  <div class="panel-header">
-    <h2 class="panel-title" id="ptitle-agb"></h2>
-    <div class="panel-actions">
-      <button class="btn-dl" onclick="dlDoc('agb')">↓ <span data-k="dl_btn">Download .docx</span></button>
-      <button class="btn-close" onclick="closeDoc('agb')" aria-label="Schliessen">✕</button>
+<div id="panel-cookie" class="panel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div class="panel-title" id="pt-cookie">Cookie Policy</div>
+      <div class="panel-acts">
+        <button class="btn-dl" onclick="dlDoc('cookie')">↓ <span class="t-dl">Download .docx</span></button>
+        <button class="btn-x" onclick="closeDoc('cookie')">✕</button>
+      </div>
     </div>
+    <div class="legal" id="body-cookie"></div>
   </div>
-  <div class="legal-body" id="body-agb"></div>
 </div>
 
-<div class="content-panel" id="panel-dpa">
-  <div class="panel-header">
-    <h2 class="panel-title" id="ptitle-dpa"></h2>
-    <div class="panel-actions">
-      <button class="btn-dl" onclick="dlDoc('dpa')">↓ <span data-k="dl_btn">Download .docx</span></button>
-      <button class="btn-close" onclick="closeDoc('dpa')" aria-label="Schliessen">✕</button>
-    </div>
+<!-- DOWNLOAD ALL -->
+
+<div class="dl-all">
+  <div>
+    <h2 id="t-dla-h">Alle Dokumente</h2>
+    <p id="t-dla-p">Vollständiges Legal-Paket — 5 × .docx</p>
   </div>
-  <div class="legal-body" id="body-dpa"></div>
+  <button class="btn-dl-all" onclick="dlAll()">↓ <span id="t-dla-btn">Alle herunterladen</span></button>
 </div>
 
-<div class="content-panel" id="panel-partner">
-  <div class="panel-header">
-    <h2 class="panel-title" id="ptitle-partner"></h2>
-    <div class="panel-actions">
-      <button class="btn-dl" onclick="dlDoc('partner')">↓ <span data-k="dl_btn">Download .docx</span></button>
-      <button class="btn-close" onclick="closeDoc('partner')" aria-label="Schliessen">✕</button>
-    </div>
+<!-- CI -->
+
+<div class="ci">
+  <div class="ci-stamp">
+    <div class="ci-dot"></div>
+    <div class="ci-text"><b>goSNOB.ai</b> — S.N.O.B. AI Platform — Basel, CH — team@gosnob.com — © 2026</div>
   </div>
-  <div class="legal-body" id="body-partner"></div>
+  <button class="btn-ci" onclick="dlCI()"><span id="t-ci-btn">↓ CI-Badge herunterladen</span></button>
 </div>
 
-<div class="content-panel" id="panel-cookie">
-  <div class="panel-header">
-    <h2 class="panel-title" id="ptitle-cookie"></h2>
-    <div class="panel-actions">
-      <button class="btn-dl" onclick="dlDoc('cookie')">↓ <span data-k="dl_btn">Download .docx</span></button>
-      <button class="btn-close" onclick="closeDoc('cookie')" aria-label="Schliessen">✕</button>
-    </div>
-  </div>
-  <div class="legal-body" id="body-cookie"></div>
-</div>
-```
+<!-- FOOTER -->
 
-  </div><!-- /panels -->
-
-  <!-- DOWNLOAD ALL -->
-
-  <div class="dl-all">
-    <div class="dl-all-text">
-      <h2 data-k="dla_h">Alle Dokumente</h2>
-      <p data-k="dla_p">Vollständiges Legal-Paket — 5 × .docx</p>
-    </div>
-    <button class="btn-dl-all" onclick="dlAll()">↓ <span data-k="dla_btn">Alle herunterladen</span></button>
-  </div>
-
-  <!-- CI STAMP -->
-
-  <div class="ci-strip">
-    <div class="ci-stamp">
-      <div class="ci-dot"></div>
-      <div class="ci-text"><b>goSNOB.ai</b> — S.N.O.B. AI Platform — Basel, CH — team@gosnob.com — © 2026</div>
-    </div>
-    <button class="btn-ci" onclick="dlCI()"><span data-k="ci_btn">↓ CI-Badge herunterladen</span></button>
-  </div>
-
-  <!-- FOOTER -->
-
-  <footer>
-    <div class="footer-l">go<b>S.N.O.B.</b>ai — Legal Hub — Basel-Stadt, Schweiz</div>
-    <div class="footer-r">Schweizer Recht · <span>revDSG</span> · GDPR · April 2026</div>
-  </footer>
-
-</div><!-- /main-content -->
+<footer>
+  <div class="fl">go<b>S.N.O.B.</b>ai — Legal Hub — Basel-Stadt, Schweiz</div>
+  <div class="fr">Schweizer Recht · <span>revDSG</span> · GDPR · April 2026</div>
+</footer>
 
 <script>
-// ── FONT INJECTION (GitHub Pages / Safari safe) ──────────────
+// ── FONT LOAD ─────────────────────────────────────────────────
 (function(){
-  var l = document.createElement('link');
-  l.rel = 'stylesheet';
-  l.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap';
-  l.onerror = function(){
-    document.documentElement.style.setProperty('--font-display','Impact,"Arial Narrow",Arial,sans-serif');
-    document.documentElement.style.setProperty('--font-mono','"Courier New",Courier,monospace');
-  };
-  document.head.appendChild(l);
+  try{
+    var l=document.createElement('link');
+    l.rel='stylesheet';
+    l.href='https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap';
+    l.onload=function(){
+      document.documentElement.style.setProperty('--fd','"Bebas Neue",Impact,Arial,sans-serif');
+      document.documentElement.style.setProperty('--fm','"DM Mono","Courier New",monospace');
+      // Apply to elements that need it
+      var displayEls = document.querySelectorAll('.logo,.hero-title,.card-title,.panel-title,.dl-all h2,#intro h1');
+      displayEls.forEach(function(el){ el.style.fontFamily='"Bebas Neue",Impact,"Arial Narrow",Arial,sans-serif'; });
+      var monoEls = document.querySelectorAll('body,.hero-tag,.hero-sub,.meta-label,.meta-val,.card-num,.card-desc,.card-tag,.lsec-h,.lsec-sub,.lp,.lul,.lnote,.btn-dl,.btn-dl-all,.btn-ci,.btn-x,.lang-btn,.ci-text,.fl,.fr,#intro p');
+      monoEls.forEach(function(el){ el.style.fontFamily='"DM Mono","Courier New",Courier,monospace'; });
+    };
+    document.head.appendChild(l);
+  }catch(e){}
 })();
 
 // ── INTRO ────────────────────────────────────────────────────
 var introEl = document.getElementById('intro');
-function hideIntro(){
+function killIntro(){
   if(!introEl) return;
-  introEl.classList.add('done');
-  setTimeout(function(){ introEl.style.display='none'; }, 600);
+  introEl.style.transition = 'opacity 0.4s ease';
+  introEl.style.opacity = '0';
+  setTimeout(function(){ introEl.style.display = 'none'; }, 420);
 }
-setTimeout(hideIntro, 2400);
+setTimeout(killIntro, 2200);
 
-// ── i18n ─────────────────────────────────────────────────────
+// ── TRANSLATIONS ─────────────────────────────────────────────
 var T = {
   de:{
-    hero_label:'Rechtsdokumente',
-    hero_sub:'Alle rechtlichen Grundlagen für die Nutzung der SNOB-Plattform. Transparent, klar, auf Schweizer Recht basierend.',
-    m_law:'Anwendbares Recht', m_court:'Gerichtsstand', m_date:'Stand', m_contact:'Kontakt',
-    d1t:'Datenschutzerklärung', d1d:'Wie wir Ihre Daten erfassen, verarbeiten und schützen. revDSG + GDPR konform.',
-    d2t:'AGB', d2d:'Allgemeine Geschäftsbedingungen für die Nutzung der SNOB-Plattform.',
-    d3t:'Auftragsverarbeitung', d3d:'Datenverarbeitungsvertrag (AVV/DPA) für Partner und Kunden.',
-    d4t:'Partnervertrag', d4d:'Rahmenvertrag für Software- und Web-App-Kooperationen mit SNOB.',
-    d5t:'Cookie Policy', d5d:'Cookies, Tracking und Ihre Wahlmöglichkeiten auf gosnob.ai.',
-    dl_btn:'Download .docx',
-    dla_h:'Alle Dokumente', dla_p:'Vollständiges Legal-Paket — 5 × .docx', dla_btn:'Alle herunterladen',
-    ci_btn:'↓ CI-Badge herunterladen'
+    'hero-tag':'Rechtsdokumente',
+    'hero-sub':'Alle rechtlichen Grundlagen für die Nutzung der SNOB-Plattform. Transparent, klar, auf Schweizer Recht basierend.',
+    'm1':'Anwendbares Recht','m2':'Gerichtsstand','m3':'Stand','m4':'Kontakt',
+    'c1t':'Datenschutzerklärung','c1d':'Wie wir Ihre Daten erfassen, verarbeiten und schützen. revDSG + GDPR konform.',
+    'c2t':'AGB','c2d':'Allgemeine Geschäftsbedingungen für die Nutzung der SNOB-Plattform.',
+    'c3t':'Auftragsverarbeitung','c3d':'Datenverarbeitungsvertrag (AVV/DPA) für Partner und Kunden.',
+    'c4t':'Partnervertrag','c4d':'Rahmenvertrag für Software- und Web-App-Kooperationen mit SNOB.',
+    'c5t':'Cookie Policy','c5d':'Cookies, Tracking und Ihre Wahlmöglichkeiten auf gosnob.ai.',
+    'dl':'Download .docx',
+    'dla-h':'Alle Dokumente','dla-p':'Vollständiges Legal-Paket — 5 × .docx','dla-btn':'Alle herunterladen',
+    'ci-btn':'↓ CI-Badge herunterladen',
+    'pt-privacy':'Datenschutzerklärung','pt-agb':'AGB','pt-dpa':'Auftragsverarbeitung','pt-partner':'Partnervertrag','pt-cookie':'Cookie Policy'
   },
   en:{
-    hero_label:'Legal Documents',
-    hero_sub:'All legal foundations for using the SNOB platform. Transparent, clear, based on Swiss law.',
-    m_law:'Applicable Law', m_court:'Jurisdiction', m_date:'Last Updated', m_contact:'Contact',
-    d1t:'Privacy Policy', d1d:'How we collect, process and protect your data. revFADP + GDPR compliant.',
-    d2t:'Terms & Conditions', d2d:'General terms and conditions for using the SNOB platform.',
-    d3t:'Data Processing', d3d:'Data Processing Agreement (DPA) for partners and clients.',
-    d4t:'Partner Agreement', d4d:'Framework agreement for software and web app collaborations with SNOB.',
-    d5t:'Cookie Policy', d5d:'Cookies, tracking and your choices on gosnob.ai.',
-    dl_btn:'Download .docx',
-    dla_h:'All Documents', dla_p:'Complete legal package — 5 × .docx', dla_btn:'Download All',
-    ci_btn:'↓ Download CI Badge'
+    'hero-tag':'Legal Documents',
+    'hero-sub':'All legal foundations for using the SNOB platform. Transparent, clear, based on Swiss law.',
+    'm1':'Applicable Law','m2':'Jurisdiction','m3':'Last Updated','m4':'Contact',
+    'c1t':'Privacy Policy','c1d':'How we collect, process and protect your data. revFADP + GDPR compliant.',
+    'c2t':'Terms & Conditions','c2d':'General terms and conditions for using the SNOB platform.',
+    'c3t':'Data Processing','c3d':'Data Processing Agreement (DPA) for partners and clients.',
+    'c4t':'Partner Agreement','c4d':'Framework agreement for software and web app collaborations with SNOB.',
+    'c5t':'Cookie Policy','c5d':'Cookies, tracking and your choices on gosnob.ai.',
+    'dl':'Download .docx',
+    'dla-h':'All Documents','dla-p':'Complete legal package — 5 × .docx','dla-btn':'Download All',
+    'ci-btn':'↓ Download CI Badge',
+    'pt-privacy':'Privacy Policy','pt-agb':'Terms & Conditions','pt-dpa':'Data Processing','pt-partner':'Partner Agreement','pt-cookie':'Cookie Policy'
   },
   fr:{
-    hero_label:'Documents Légaux',
-    hero_sub:"Tous les fondements juridiques pour l'utilisation de la plateforme SNOB. Transparent, clair, basé sur le droit suisse.",
-    m_law:'Droit applicable', m_court:'For juridictionnel', m_date:'Mise à jour', m_contact:'Contact',
-    d1t:'Politique de confidentialité', d1d:'Comment nous collectons, traitons et protégeons vos données. LPD révisée + RGPD.',
-    d2t:'CGV', d2d:"Conditions générales de vente pour l'utilisation de la plateforme SNOB.",
-    d3t:'Traitement des données', d3d:'Accord de traitement des données (DPA) pour les partenaires et clients.',
-    d4t:'Contrat partenaire', d4d:'Contrat cadre pour les coopérations logicielles et web avec SNOB.',
-    d5t:'Politique de cookies', d5d:'Cookies, suivi et vos choix sur gosnob.ai.',
-    dl_btn:'Télécharger .docx',
-    dla_h:'Tous les documents', dla_p:'Package légal complet — 5 × .docx', dla_btn:'Tout télécharger',
-    ci_btn:'↓ Télécharger le badge CI'
+    'hero-tag':'Documents Légaux',
+    'hero-sub':"Tous les fondements juridiques pour l'utilisation de la plateforme SNOB. Transparent, clair, basé sur le droit suisse.",
+    'm1':'Droit applicable','m2':'For juridictionnel','m3':'Mise à jour','m4':'Contact',
+    'c1t':'Politique de confidentialité','c1d':'Comment nous collectons, traitons et protégeons vos données. LPD révisée + RGPD.',
+    'c2t':'CGV','c2d':"Conditions générales de vente pour l'utilisation de la plateforme SNOB.",
+    'c3t':'Traitement des données','c3d':'Accord de traitement des données (DPA) pour les partenaires et clients.',
+    'c4t':'Contrat partenaire','c4d':'Contrat cadre pour les coopérations logicielles et web avec SNOB.',
+    'c5t':'Politique de cookies','c5d':'Cookies, suivi et vos choix sur gosnob.ai.',
+    'dl':'Télécharger .docx',
+    'dla-h':'Tous les documents','dla-p':'Package légal complet — 5 × .docx','dla-btn':'Tout télécharger',
+    'ci-btn':'↓ Télécharger le badge CI',
+    'pt-privacy':'Politique de confidentialité','pt-agb':'CGV','pt-dpa':'Traitement des données','pt-partner':'Contrat partenaire','pt-cookie':'Politique de cookies'
   }
+};
+
+// Static ID map
+var tMap = {
+  't-hero-tag':'hero-tag','t-hero-sub':'hero-sub',
+  't-m1':'m1','t-m2':'m2','t-m3':'m3','t-m4':'m4',
+  't-c1t':'c1t','t-c1d':'c1d','t-c2t':'c2t','t-c2d':'c2d',
+  't-c3t':'c3t','t-c3d':'c3d','t-c4t':'c4t','t-c4d':'c4d',
+  't-c5t':'c5t','t-c5d':'c5d',
+  't-dl':'dl','t-dla-h':'dla-h','t-dla-p':'dla-p','t-dla-btn':'dla-btn',
+  't-ci-btn':'ci-btn',
+  'pt-privacy':'pt-privacy','pt-agb':'pt-agb','pt-dpa':'pt-dpa','pt-partner':'pt-partner','pt-cookie':'pt-cookie'
 };
 
 var lang = 'de';
 
 function setLang(l){
   lang = l;
+  // toggle button state
   document.querySelectorAll('.lang-btn').forEach(function(b){
-    b.classList.toggle('active', b.textContent.trim().toLowerCase() === l);
+    b.classList.toggle('on', b.textContent.trim().toLowerCase() === l);
   });
-  document.querySelectorAll('[data-k]').forEach(function(el){
-    var k = el.getAttribute('data-k');
-    if(T[l] && T[l][k] !== undefined) el.textContent = T[l][k];
+  // update all mapped IDs
+  Object.keys(tMap).forEach(function(id){
+    var el = document.getElementById(id);
+    if(el && T[l][tMap[id]] !== undefined) el.textContent = T[l][tMap[id]];
   });
-  // Re-render all panel bodies with new language
+  // update .t-dl spans (download btn text inside panels)
+  document.querySelectorAll('.t-dl').forEach(function(el){
+    el.textContent = T[l]['dl'];
+  });
+  // re-render all open/rendered panels
   renderAll();
-  // If a panel is open, keep it open with new language content
-  if(openId){
-    var panel = document.getElementById('panel-'+openId);
-    if(panel) panel.classList.add('active');
-  }
 }
 
-// ── LEGAL CONTENT DATA ────────────────────────────────────────
-var docs = {
+// ── CONTENT DATA ──────────────────────────────────────────────
+var D = {
   privacy:{
     de:[
-      {h:'1. Verantwortliche Stelle', p:'Go S.N.O.B. AI GmbH («SNOB») mit Sitz in Basel, Schweiz, ist verantwortlich für die Verarbeitung personenbezogener Daten im Zusammenhang mit unserer KI-Kommunikationsplattform.', items:['Kontakt: team@gosnob.com','Website: gosnob.ai']},
-      {h:'2. Geltungsbereich', p:'Diese Datenschutzerklärung gilt für die SNOB-Plattform (KI-Calls, Chat, Web-Applikationen) und richtet sich nach dem revDSG sowie, soweit anwendbar, der DSGVO/GDPR.'},
-      {h:'3. Erhobene Daten', sub:'3.1 Von Ihnen direkt', items:['Name, Vorname, Firmenname','E-Mail-Adresse, Telefonnummer','Rechnungs- und Zahlungsdaten (via Stripe)','Agent-Konfigurationen, Wissensdatenbanken','Support-Korrespondenz']},
-      {sub:'3.2 Automatisch', items:['IP-Adresse, Browser- und Gerätetyp','Plattform-Nutzungsdaten','Cookies (siehe Abschnitt 8)']},
-      {sub:'3.3 Durch den Call-Service', p:'Für KI-Calls verarbeiten wir Anrufdaten, Aufzeichnungen und Transkripte im Auftrag. Sie sind Controller, wir sind Processor.'},
-      {h:'4. Rechtsgrundlagen', items:['Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO / Art. 13 revDSG)','Berechtigte Interessen — Betrieb, Sicherheit, Verbesserung','Gesetzliche Verpflichtungen (Steuer, Compliance)','Einwilligung (Marketing, nicht essentielle Cookies)']},
-      {h:'5. Sub-Processors', p:'Wir setzen folgende Technologiepartner ein:', items:['Google LLC — Cloud AI, Analytics (SCCs vorhanden)','Anthropic PBC — KI-Sprachmodelle (SCCs vorhanden)','Meta Platforms — WhatsApp Business API (sofern aktiviert)','Metanet AG — Hosting & Netzwerkinfrastruktur, Schweiz','Voice-Infrastruktur-Partner — KI-Call-Technologie (SCCs vorhanden)','Stripe Inc. — Zahlungsabwicklung (SCCs/DPF vorhanden)']},
-      {h:'6. Internationale Transfers', p:'Übertragungen ausserhalb CH/EWR erfolgen auf Basis der EU-SCCs (2021/914) oder Angemessenheitsentscheidungen des Bundesrates.'},
-      {h:'7. Aufbewahrungsfristen', items:['Kontodaten: Dauer der Geschäftsbeziehung + gesetzl. Fristen (CH: 10 Jahre)','Call-Aufzeichnungen: 90 Tage Standard, konfigurierbar bis 180 Tage','Nach Kündigung: Löschung innert 30–60 Tagen']},
-      {h:'8. Ihre Rechte (revDSG / DSGVO)', items:['Auskunft (Art. 25 revDSG / Art. 15 DSGVO)','Berichtigung, Löschung, Einschränkung','Datenportabilität, Widerspruch','Beschwerde beim EDÖB, Bern oder zuständiger EU-Behörde'], p:'Anfragen: team@gosnob.com — Antwort innert 30 Tagen.'},
-      {h:'9. Sicherheit', p:'TLS in Transit, AES at Rest, RBAC-Zugangskontrolle, MFA, Penetrationstests, Breach-Notification innert 72h.'},
-      {h:'10. Gerichtsstand', note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
+      {h:'1. Verantwortliche Stelle',p:'Go S.N.O.B. AI GmbH («SNOB») mit Sitz in Basel, Schweiz, ist verantwortlich für die Verarbeitung personenbezogener Daten im Zusammenhang mit unserer KI-Kommunikationsplattform.',li:['Kontakt: team@gosnob.com','Website: gosnob.ai']},
+      {h:'2. Geltungsbereich',p:'Diese Datenschutzerklärung gilt für die SNOB-Plattform (KI-Calls, Chat, Web-Applikationen). Sie richtet sich nach dem Schweizer Datenschutzgesetz (revDSG) sowie, soweit anwendbar, der DSGVO/GDPR.'},
+      {h:'3.1 Direkt von Ihnen',li:['Name, Vorname, Firmenname','E-Mail-Adresse, Telefonnummer','Rechnungs- und Zahlungsdaten (via Stripe)','Agent-Konfigurationen, Wissensdatenbanken, Skripte','Support-Korrespondenz']},
+      {h:'3.2 Automatisch erfasst',li:['IP-Adresse, Browser- und Gerätetyp','Plattform-Nutzungsdaten (Features, Dauer, Fehler)','Cookies (siehe Abschnitt 8)']},
+      {h:'3.3 Call-Service',p:'Für KI-Calls verarbeiten wir Anrufdaten, Aufzeichnungen und Transkripte im Auftrag. Sie sind Controller — wir sind Processor.'},
+      {h:'4. Rechtsgrundlagen',li:['Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO / Art. 13 revDSG)','Berechtigte Interessen — Betrieb, Sicherheit, Verbesserung','Gesetzliche Verpflichtungen (Steuer, Compliance)','Einwilligung (Marketing, nicht essentielle Cookies)']},
+      {h:'5. Sub-Processors',p:'Folgende Technologiepartner verarbeiten Daten in unserem Auftrag:',li:['Google LLC — Cloud AI, Analytics (SCCs vorhanden)','Anthropic PBC — KI-Sprachmodelle (SCCs vorhanden)','Meta Platforms — WhatsApp Business API (sofern aktiviert)','Metanet AG — Hosting & Netzwerkinfrastruktur, Schweiz','Voice-Infrastruktur-Partner — KI-Call-Technologie (SCCs vorhanden)','Stripe Inc. — Zahlungsabwicklung (SCCs/DPF vorhanden)']},
+      {h:'6. Internationale Transfers',p:'Übertragungen ausserhalb CH/EWR erfolgen auf Basis der EU-Standardvertragsklauseln (SCCs 2021/914) oder Angemessenheitsentscheidungen des Schweizer Bundesrates.'},
+      {h:'7. Aufbewahrungsfristen',li:['Kontodaten: Dauer der Geschäftsbeziehung + gesetzliche Fristen (CH: 10 Jahre)','Call-Aufzeichnungen: 90 Tage Standard, konfigurierbar bis 180 Tage','Nach Kündigung: Löschung innert 30–60 Tagen']},
+      {h:'8. Ihre Rechte',li:['Auskunft (Art. 25 revDSG / Art. 15 DSGVO)','Berichtigung, Löschung, Einschränkung','Datenportabilität, Widerspruch','Beschwerde beim EDÖB, Bern oder zuständiger EU-Behörde'],p:'Anfragen: team@gosnob.com — Wir antworten innert 30 Tagen.'},
+      {h:'9. Datensicherheit',p:'TLS in Transit, AES at Rest, RBAC-Zugangskontrolle, MFA, regelmässige Penetrationstests, Breach-Notification innert 72h.'},
+      {h:'10. Gerichtsstand',note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
     ],
     en:[
-      {h:'1. Controller', p:'Go S.N.O.B. AI GmbH ("SNOB") headquartered in Basel, Switzerland, is responsible for processing personal data in connection with our AI communication platform.', items:['Contact: team@gosnob.com','Website: gosnob.ai']},
-      {h:'2. Scope', p:'This Privacy Policy applies to the SNOB platform (AI calls, chat, web applications) and is based on the Swiss revFADP and, where applicable, the GDPR.'},
-      {h:'3. Data Collected', sub:'3.1 Directly from you', items:['Name, company name','Email address, phone number','Billing and payment data (via Stripe)','Agent configurations, knowledge bases','Support correspondence']},
-      {sub:'3.2 Automatically', items:['IP address, browser and device type','Platform usage data','Cookies (see section 8)']},
-      {h:'4. Legal Bases', items:['Contract performance (Art. 6(1)(b) GDPR / Art. 13 revFADP)','Legitimate interests — operation, security, improvement','Legal obligations (tax, compliance)','Consent (marketing, non-essential cookies)']},
-      {h:'5. Sub-Processors', p:'We use the following technology partners:', items:['Google LLC — Cloud AI, Analytics (SCCs in place)','Anthropic PBC — AI language models (SCCs in place)','Meta Platforms — WhatsApp Business API (if activated)','Metanet AG — Hosting & network infrastructure, Switzerland','Voice infrastructure partner — AI call technology (SCCs in place)','Stripe Inc. — Payment processing (SCCs/DPF in place)']},
-      {h:'6. International Transfers', p:'Transfers outside CH/EEA are based on EU SCCs (2021/914) or Swiss Federal Council adequacy decisions.'},
-      {h:'7. Retention', items:['Account data: Duration of relationship + legal retention (CH: 10 years)','Call recordings: 90 days default, configurable to 180 days','After termination: deletion within 30–60 days']},
-      {h:'8. Your Rights', items:['Access (Art. 25 revFADP / Art. 15 GDPR)','Rectification, erasure, restriction','Portability, objection','Complaint with FDPIC Bern or competent EU authority'], p:'Requests: team@gosnob.com — Response within 30 days.'},
-      {h:'9. Security', p:'TLS in transit, AES at rest, RBAC, MFA, penetration tests, breach notification within 72h.'},
-      {h:'10. Jurisdiction', note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
+      {h:'1. Controller',p:'Go S.N.O.B. AI GmbH ("SNOB") headquartered in Basel, Switzerland, is responsible for processing personal data in connection with our AI communication platform.',li:['Contact: team@gosnob.com','Website: gosnob.ai']},
+      {h:'2. Scope',p:'This Privacy Policy applies to the SNOB platform (AI calls, chat, web applications) and is based on the Swiss revFADP and, where applicable, the GDPR.'},
+      {h:'3.1 Data You Provide',li:['Name, company name','Email address, phone number','Billing and payment data (via Stripe)','Agent configurations, knowledge bases, scripts','Support correspondence']},
+      {h:'3.2 Automatically Collected',li:['IP address, browser and device type','Platform usage data','Cookies (see section 8)']},
+      {h:'3.3 Call Service',p:'For AI calls we process call data, recordings and transcripts on your behalf. You are the Controller — we are the Processor.'},
+      {h:'4. Legal Bases',li:['Contract performance (Art. 6(1)(b) GDPR / Art. 13 revFADP)','Legitimate interests — operation, security, improvement','Legal obligations (tax, compliance)','Consent (marketing, non-essential cookies)']},
+      {h:'5. Sub-Processors',p:'The following technology partners process data on our behalf:',li:['Google LLC — Cloud AI, Analytics (SCCs in place)','Anthropic PBC — AI language models (SCCs in place)','Meta Platforms — WhatsApp Business API (if activated)','Metanet AG — Hosting & network infrastructure, Switzerland','Voice infrastructure partner — AI call technology (SCCs in place)','Stripe Inc. — Payment processing (SCCs/DPF in place)']},
+      {h:'6. International Transfers',p:'Transfers outside CH/EEA are based on EU Standard Contractual Clauses (SCCs 2021/914) or Swiss Federal Council adequacy decisions.'},
+      {h:'7. Retention',li:['Account data: Duration of relationship + legal retention (CH: 10 years)','Call recordings: 90 days default, configurable to 180 days','After termination: deletion within 30–60 days']},
+      {h:'8. Your Rights',li:['Access (Art. 25 revFADP / Art. 15 GDPR)','Rectification, erasure, restriction','Portability, objection','Complaint with FDPIC Bern or competent EU authority'],p:'Requests: team@gosnob.com — Response within 30 days.'},
+      {h:'9. Security',p:'TLS in transit, AES at rest, RBAC, MFA, penetration tests, breach notification within 72h.'},
+      {h:'10. Jurisdiction',note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
     ],
     fr:[
-      {h:'1. Responsable du traitement', p:'Go S.N.O.B. AI GmbH («SNOB») dont le siège est à Bâle, Suisse, est responsable du traitement des données personnelles liées à notre plateforme de communication IA.', items:['Contact: team@gosnob.com','Site web: gosnob.ai']},
-      {h:'2. Champ d\'application', p:'Cette politique s\'applique à la plateforme SNOB (appels IA, chat, applications web) et se base sur la LPD révisée et, le cas échéant, le RGPD.'},
-      {h:'3. Données collectées', items:['Nom, prénom, raison sociale','Adresse e-mail, numéro de téléphone','Données de facturation (via Stripe)','Configurations d\'agents, bases de connaissances']},
-      {h:'4. Bases légales', items:['Exécution du contrat (Art. 6 al. 1 lit. b RGPD / Art. 13 LPD)','Intérêts légitimes','Obligations légales','Consentement (marketing, cookies non essentiels)']},
-      {h:'5. Sous-traitants', items:['Google LLC — Cloud IA, Analytics (CCT en place)','Anthropic PBC — Modèles de langage IA (CCT en place)','Meta Platforms — WhatsApp Business API (si activé)','Metanet AG — Hébergement, Suisse','Partenaire infrastructure vocale (CCT en place)','Stripe Inc. — Paiements (CCT en place)']},
-      {h:'6. Vos droits', items:['Accès, rectification, effacement','Limitation, portabilité, opposition','Réclamation auprès du PFPDT (Berne)'], p:'Demandes: team@gosnob.com — Réponse sous 30 jours.'},
-      {h:'7. For juridictionnel', note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
+      {h:'1. Responsable du traitement',p:'Go S.N.O.B. AI GmbH («SNOB») dont le siège est à Bâle, Suisse, est responsable du traitement des données personnelles liées à notre plateforme de communication IA.',li:['Contact: team@gosnob.com','Site web: gosnob.ai']},
+      {h:'2. Champ d\'application',p:'Cette politique s\'applique à la plateforme SNOB (appels IA, chat, applications web). Elle se base sur la LPD révisée et, le cas échéant, le RGPD.'},
+      {h:'3. Données collectées',li:['Nom, prénom, raison sociale','Adresse e-mail, téléphone','Données de facturation (via Stripe)','Configurations d\'agents, bases de connaissances']},
+      {h:'4. Bases légales',li:['Exécution du contrat (Art. 6 al. 1 lit. b RGPD / Art. 13 LPD)','Intérêts légitimes — exploitation, sécurité, amélioration','Obligations légales (fiscalité, conformité)','Consentement (marketing, cookies non essentiels)']},
+      {h:'5. Sous-traitants',p:'Les partenaires technologiques suivants traitent des données en notre nom:',li:['Google LLC — Cloud IA, Analytics (CCT en place)','Anthropic PBC — Modèles de langage IA (CCT en place)','Meta Platforms — WhatsApp Business API (si activé)','Metanet AG — Hébergement, Suisse','Partenaire infrastructure vocale (CCT en place)','Stripe Inc. — Paiements (CCT/DPF en place)']},
+      {h:'6. Vos droits',li:['Accès (Art. 25 LPD / Art. 15 RGPD)','Rectification, effacement, limitation','Portabilité, opposition','Réclamation auprès du PFPDT (Berne)'],p:'Demandes: team@gosnob.com — Réponse sous 30 jours.'},
+      {h:'7. For juridictionnel',note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
     ]
   },
   agb:{
     de:[
-      {h:'1. Geltungsbereich', p:'Diese AGB regeln die Nutzung der SNOB-Plattform durch Go S.N.O.B. AI GmbH («SNOB») und den Kunden. Mit der Nutzung stimmen Sie diesen AGB zu.'},
-      {h:'2. Leistungen', items:['AI Brain: KI-gestützte Entscheidungs- und Kommunikationslogik','Communication Layer: KI-Calls (In- & Outbound), Chat, Voice AI','Interface Layer: Dynamische UI / Web-Applikationen','Automation Layer: CRM-Integration, Buchung, Zahlungsabwicklung']},
-      {h:'3. Preise & Zahlung', sub:'Abonnementpläne', items:['GoSTART — 333 CHF / Monat','GoPRO — 777 CHF / Monat','GoCORPORATE — Auf Anfrage'], p:'Alle Preise in CHF exkl. MWST (7,7%). Zahlung via Stripe. Automatische Verlängerung sofern nicht gekündigt. Keine Rückerstattung.'},
-      {h:'4. Kundenpflichten', items:['Einhaltung aller anwendbaren Gesetze (FMG, DSG, UWG, DSGVO)','Einholung aller erforderlichen Einwilligungen für KI-Calls','Keine rechtswidrigen oder irreführenden Inhalte','Kein Weiterverkauf ohne schriftliche Zustimmung']},
-      {h:'5. Geistiges Eigentum', p:'Alle Rechte an der SNOB-Plattform verbleiben bei SNOB. Kunden erhalten eine eingeschränkte, nicht übertragbare Nutzungslizenz für interne Geschäftszwecke.'},
-      {h:'6. Haftung', items:['Keine Haftung für indirekte Schäden oder entgangenen Gewinn','Haftungsgrenze: höherer Betrag aus (a) Gebühren der letzten 3 Monate oder (b) CHF 500','Ausgenommen: Vorsatz, grobe Fahrlässigkeit, Personenschäden']},
-      {h:'7. Kündigung', items:['Jederzeit zum Ende der Abrechnungsperiode via team@gosnob.com','Keine Rückerstattung bei vorzeitiger Kündigung','30 Tage Datenzugriff nach Kündigung, danach Löschung']},
-      {h:'8. Gerichtsstand', note:'Schweizer Recht (OR). Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
+      {h:'1. Geltungsbereich',p:'Diese AGB regeln die Nutzung der SNOB-Plattform — KI-gestützte Lösung für Sprachautomatisierung, Chat, Web-Applikationen — durch Go S.N.O.B. AI GmbH («SNOB») und den Kunden.'},
+      {h:'2. Leistungen',li:['AI Brain: KI-gestützte Entscheidungs- und Kommunikationslogik','Communication Layer: KI-Calls (In- & Outbound), Chat, Voice AI','Interface Layer: Dynamische UI / Web-Applikationen','Automation Layer: CRM-Integration, Buchung, Zahlungsabwicklung']},
+      {h:'3. Preise & Zahlung',li:['GoSTART — 333 CHF / Monat','GoPRO — 777 CHF / Monat','GoCORPORATE — Auf Anfrage'],p:'Alle Preise in CHF exkl. MWST (7,7%). Zahlung via Stripe. Automatische Verlängerung sofern nicht vor Ablauf gekündigt. Keine Rückerstattung.'},
+      {h:'4. Kundenpflichten',li:['Einhaltung aller anwendbaren Gesetze (FMG, DSG, UWG, DSGVO)','Einholung aller erforderlichen Einwilligungen für KI-Calls und Aufzeichnungen','Keine rechtswidrigen oder irreführenden Inhalte','Kein Weiterverkauf ohne schriftliche Zustimmung von SNOB']},
+      {h:'5. Geistiges Eigentum',p:'Alle Rechte an der SNOB-Plattform verbleiben bei SNOB. Kunden erhalten eine eingeschränkte, nicht übertragbare Nutzungslizenz für interne Geschäftszwecke.'},
+      {h:'6. Haftung',li:['Keine Haftung für indirekte Schäden oder entgangenen Gewinn','Haftungsgrenze: höherer Betrag aus (a) Gebühren der letzten 3 Monate oder (b) CHF 500','Ausgenommen: Vorsatz, grobe Fahrlässigkeit, Personenschäden']},
+      {h:'7. Kündigung',li:['Jederzeit zum Ende der Abrechnungsperiode via team@gosnob.com','Keine Rückerstattung bei vorzeitiger Kündigung','30 Tage Datenzugriff nach Kündigung, danach Löschung']},
+      {h:'8. Gerichtsstand',note:'Schweizer Recht (OR). Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
     ],
     en:[
-      {h:'1. Scope', p:'These Terms govern the use of the SNOB platform by Go S.N.O.B. AI GmbH ("SNOB") and the customer. By using the service you agree to these Terms.'},
-      {h:'2. Services', items:['AI Brain: AI-powered decision and communication logic','Communication Layer: AI Calls (In- & Outbound), Chat, Voice AI','Interface Layer: Dynamic UI / Web Applications','Automation Layer: CRM integration, booking, payment processing']},
-      {h:'3. Pricing & Payment', sub:'Subscription Plans', items:['GoSTART — CHF 333 / month','GoPRO — CHF 777 / month','GoCORPORATE — On request'], p:'All prices in CHF excl. VAT (7.7%). Payment via Stripe. Auto-renewal unless cancelled. No refunds.'},
-      {h:'4. Customer Obligations', items:['Compliance with all applicable laws','Obtaining all required consents for AI calls','No unlawful or misleading content','No reselling without written consent']},
-      {h:'5. Intellectual Property', p:'All rights to the SNOB platform remain with SNOB. Customers receive a limited, non-transferable license for internal business purposes.'},
-      {h:'6. Liability', items:['No liability for indirect damages or lost profits','Cap: higher of (a) fees paid in last 3 months or (b) CHF 500','Exceptions: gross negligence, wilful misconduct, personal injury']},
-      {h:'7. Termination', items:['At any time to end of billing period via team@gosnob.com','No refund on early cancellation','30 days data access after termination, then deletion']},
-      {h:'8. Jurisdiction', note:'Swiss law (CO). Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
+      {h:'1. Scope',p:'These Terms govern the use of the SNOB platform — an AI-powered solution for voice automation, chat and web applications — by Go S.N.O.B. AI GmbH ("SNOB") and the customer.'},
+      {h:'2. Services',li:['AI Brain: AI-powered decision and communication logic','Communication Layer: AI Calls (In- & Outbound), Chat, Voice AI','Interface Layer: Dynamic UI / Web Applications','Automation Layer: CRM integration, booking, payment processing']},
+      {h:'3. Pricing & Payment',li:['GoSTART — CHF 333 / month','GoPRO — CHF 777 / month','GoCORPORATE — On request'],p:'All prices in CHF excl. VAT (7.7%). Payment via Stripe. Auto-renewal unless cancelled before expiry. No refunds.'},
+      {h:'4. Customer Obligations',li:['Compliance with all applicable laws','Obtaining all required consents for AI calls and recordings','No unlawful or misleading content','No reselling without written consent from SNOB']},
+      {h:'5. Intellectual Property',p:'All rights to the SNOB platform remain with SNOB. Customers receive a limited, non-transferable license for internal business purposes.'},
+      {h:'6. Liability',li:['No liability for indirect damages or lost profits','Cap: higher of (a) fees paid in last 3 months or (b) CHF 500','Exceptions: gross negligence, wilful misconduct, personal injury']},
+      {h:'7. Termination',li:['At any time to end of billing period via team@gosnob.com','No refund on early cancellation','30 days data access after termination, then deletion']},
+      {h:'8. Jurisdiction',note:'Swiss law (CO). Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
     ],
     fr:[
-      {h:'1. Champ d\'application', p:"Ces CGV régissent l'utilisation de la plateforme SNOB par Go S.N.O.B. AI GmbH («SNOB») et le client."},
-      {h:'2. Services', items:["AI Brain: Logique de décision et communication IA","Communication Layer: Appels IA (entrant et sortant), Chat","Interface Layer: UI dynamique / Applications web","Automation Layer: Intégration CRM, réservation, paiements"]},
-      {h:'3. Prix & Paiement', items:['GoSTART — 333 CHF / mois','GoPRO — 777 CHF / mois','GoCORPORATE — Sur demande'], p:'Tous les prix en CHF HT (TVA 7,7%). Paiement via Stripe. Renouvellement automatique. Aucun remboursement.'},
-      {h:'4. Responsabilité', items:['Plafond: 3 mois de frais ou CHF 500 (montant le plus élevé)','Aucune responsabilité pour dommages indirects','Exceptions: faute grave, dol, dommages corporels']},
-      {h:'5. For juridictionnel', note:'Droit suisse (CO). For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
+      {h:'1. Champ d\'application',p:"Ces CGV régissent l'utilisation de la plateforme SNOB par Go S.N.O.B. AI GmbH («SNOB») et le client."},
+      {h:'2. Services',li:['AI Brain: Logique de décision et communication IA','Communication Layer: Appels IA (entrant/sortant), Chat, Voice AI','Interface Layer: UI dynamique / Applications web','Automation Layer: Intégration CRM, réservation, paiements']},
+      {h:'3. Prix & Paiement',li:['GoSTART — 333 CHF / mois','GoPRO — 777 CHF / mois','GoCORPORATE — Sur demande'],p:'Tous les prix en CHF HT (TVA 7,7%). Paiement via Stripe. Renouvellement automatique. Aucun remboursement.'},
+      {h:'4. Responsabilité',li:['Aucune responsabilité pour dommages indirects','Plafond: 3 mois de frais ou CHF 500 (montant le plus élevé)','Exceptions: faute grave, dol, dommages corporels']},
+      {h:'5. For juridictionnel',note:'Droit suisse (CO). For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
     ]
   },
   dpa:{
     de:[
-      {h:'1. Gegenstand & Rollenmatrix', p:'SNOB verarbeitet personenbezogene Daten ausschliesslich im Rahmen der gebuchten Services nach dokumentierten Weisungen.', items:['Partner als Controller: bestimmt Zweck und Mittel','SNOB als Processor: verarbeitet nur nach Weisungen','White-Label: Partner als Processor, SNOB als Sub-Processor']},
-      {h:'2. Pflichten des Partners', items:['Sicherstellung der Rechtsgrundlage für jede Verarbeitung','Datenschutzinformationen an betroffene Personen','Einholung aller erforderlichen Einwilligungen','Keine Verarbeitung besonderer Datenkategorien ohne Vereinbarung']},
-      {h:'3. Pflichten von SNOB', items:['Verarbeitung nur nach dokumentierten Weisungen','Vertraulichkeit — autorisiertes Personal, Least-Privilege','TOMs gemäss Anhang A','Unterstützung bei Betroffenenrechten','Breach-Meldung innert 48 Stunden nach Kenntnisnahme']},
-      {h:'4. Sub-Processors (genehmigt)', items:['Google LLC — Cloud-Hosting, KI (SCCs)','Anthropic PBC — KI-Sprachmodelle (SCCs)','Meta Platforms — WhatsApp Business API (SCCs)','Metanet AG — Hosting, Schweiz','Voice-Infrastruktur-Partner — STT/TTS/Routing (SCCs)','Stripe Inc. — Zahlungsabwicklung (SCCs)'], p:'Änderungen 30 Tage im Voraus per E-Mail.'},
-      {h:'5. Technische & Org. Massnahmen (TOMs)', items:['TLS in Transit, AES at Rest','RBAC, MFA für privilegierte Zugriffe','Netzwerksegmentierung, Penetrationstests','Incident-Response-Plan','Regelmässige Backups mit automatischer Purge-Routine']},
-      {h:'6. Aufbewahrung & Löschung', items:['Call-Aufzeichnungen: 90 Tage Standard (bis 180 Tage konfigurierbar)','Call-Metadaten: max. 12 Monate','Nach Vertragsende: Löschung aktiver Daten innert 30–60 Tagen']},
-      {h:'7. Gerichtsstand', note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
+      {h:'1. Gegenstand & Rollenmatrix',p:'SNOB verarbeitet personenbezogene Daten ausschliesslich im Rahmen der gebuchten Services nach dokumentierten Weisungen.',li:['Partner als Controller: bestimmt Zweck und Mittel','SNOB als Processor: verarbeitet nur nach Weisungen','White-Label-Konstellationen: Partner als Processor, SNOB als Sub-Processor']},
+      {h:'2. Pflichten des Partners',li:['Sicherstellung der Rechtsgrundlage für jede Verarbeitung','Datenschutzinformationen an betroffene Personen','Einholung aller erforderlichen Einwilligungen (Calls, Aufzeichnung, Marketing)','Keine Verarbeitung besonderer Datenkategorien ohne gesonderte Vereinbarung']},
+      {h:'3. Pflichten von SNOB',li:['Verarbeitung nur nach dokumentierten Weisungen','Vertraulichkeit — autorisiertes Personal, Least-Privilege','TOMs gemäss Anhang A','Unterstützung bei Betroffenenrechten','Breach-Meldung innert 48 Stunden nach Kenntnisnahme']},
+      {h:'4. Sub-Processors (genehmigt)',li:['Google LLC — Cloud-Hosting, KI (SCCs)','Anthropic PBC — KI-Sprachmodelle (SCCs)','Meta Platforms — WhatsApp Business API (SCCs)','Metanet AG — Hosting, Schweiz','Voice-Infrastruktur-Partner — STT/TTS/Routing (SCCs)','Stripe Inc. — Zahlungsabwicklung (SCCs)'],p:'Änderungen werden 30 Tage im Voraus per E-Mail kommuniziert.'},
+      {h:'5. Technische & Org. Massnahmen',li:['TLS in Transit, AES at Rest','RBAC, MFA für privilegierte Zugriffe','Netzwerksegmentierung, Penetrationstests','Incident-Response-Plan','Regelmässige Backups mit automatischer Purge-Routine']},
+      {h:'6. Aufbewahrung & Löschung',li:['Call-Aufzeichnungen: 90 Tage Standard (bis 180 Tage konfigurierbar)','Call-Metadaten: max. 12 Monate','Nach Vertragsende: Löschung aktiver Daten innert 30–60 Tagen']},
+      {h:'7. Gerichtsstand',note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
     ],
     en:[
-      {h:'1. Subject & Role Matrix', p:'SNOB processes personal data exclusively within the scope of the booked services, per the Partner\'s documented instructions.', items:['Partner as Controller: determines purpose and means','SNOB as Processor: processes only on instructions','White-label: Partner as Processor, SNOB as Sub-Processor']},
-      {h:'2. Partner Responsibilities', items:['Establishing lawful basis for all processing','Privacy information to data subjects','Obtaining all required consents','No special category data without separate agreement']},
-      {h:'3. SNOB Obligations', items:['Processing only per documented instructions','Confidentiality — authorised personnel, least-privilege','TOMs per Annex A','Assistance with data subject rights','Breach notification within 48 hours']},
-      {h:'4. Approved Sub-Processors', items:['Google LLC — Cloud hosting, AI (SCCs)','Anthropic PBC — AI language models (SCCs)','Meta Platforms — WhatsApp Business API (SCCs)','Metanet AG — Hosting, Switzerland','Voice infrastructure partner — STT/TTS/Routing (SCCs)','Stripe Inc. — Payment processing (SCCs)'], p:'Changes notified 30 days in advance by email.'},
-      {h:'5. TOMs', items:['TLS in transit, AES at rest','RBAC, MFA for privileged access','Network segmentation, penetration tests','Incident response plan','Regular backups with automatic purge']},
-      {h:'6. Retention & Deletion', items:['Call recordings: 90 days default (up to 180 days configurable)','Call metadata: max. 12 months','After termination: deletion within 30–60 days']},
-      {h:'7. Jurisdiction', note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
+      {h:'1. Subject & Role Matrix',p:'SNOB processes personal data exclusively per the Partner\'s documented instructions.',li:['Partner as Controller: determines purpose and means','SNOB as Processor: processes only on instructions','White-label: Partner as Processor, SNOB as Sub-Processor']},
+      {h:'2. Partner Responsibilities',li:['Establishing lawful basis for all processing','Privacy information to data subjects','Obtaining all required consents (calls, recording, marketing)','No special category data without separate agreement']},
+      {h:'3. SNOB Obligations',li:['Processing only per documented instructions','Confidentiality — authorised personnel, least-privilege','TOMs per Annex A','Assistance with data subject rights','Breach notification within 48 hours']},
+      {h:'4. Approved Sub-Processors',li:['Google LLC — Cloud hosting, AI (SCCs)','Anthropic PBC — AI language models (SCCs)','Meta Platforms — WhatsApp Business API (SCCs)','Metanet AG — Hosting, Switzerland','Voice infrastructure partner — STT/TTS/Routing (SCCs)','Stripe Inc. — Payment processing (SCCs)'],p:'Changes notified 30 days in advance by email.'},
+      {h:'5. Technical & Org. Measures',li:['TLS in transit, AES at rest','RBAC, MFA for privileged access','Network segmentation, penetration tests','Incident response plan','Regular backups with automatic purge']},
+      {h:'6. Retention & Deletion',li:['Call recordings: 90 days default (up to 180 days configurable)','Call metadata: max. 12 months','After termination: deletion within 30–60 days']},
+      {h:'7. Jurisdiction',note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
     ],
     fr:[
-      {h:'1. Objet & Matrice des rôles', items:['Partenaire en tant que responsable du traitement','SNOB en tant que sous-traitant','White-label: partenaire sous-traitant, SNOB sous-sous-traitant']},
-      {h:'2. Obligations du partenaire', items:["Établir la base légale de tout traitement","Informations de protection des données aux personnes concernées","Obtenir tous les consentements requis"]},
-      {h:'3. Obligations de SNOB', items:['Traitement uniquement selon les instructions','Confidentialité','Notification de violation dans les 48 heures']},
-      {h:'4. Sous-traitants approuvés', items:['Google LLC (CCT)','Anthropic PBC (CCT)','Meta Platforms (CCT)','Metanet AG — Suisse','Partenaire infrastructure vocale (CCT)','Stripe Inc. (CCT)']},
-      {h:'5. For juridictionnel', note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
+      {h:'1. Objet & Matrice des rôles',li:['Partenaire en tant que responsable du traitement','SNOB en tant que sous-traitant','White-label: partenaire sous-traitant, SNOB sous-sous-traitant']},
+      {h:'2. Obligations du partenaire',li:['Établir la base légale de tout traitement','Informations de protection des données aux personnes concernées','Obtenir tous les consentements requis']},
+      {h:'3. Obligations de SNOB',li:['Traitement uniquement selon les instructions','Confidentialité — personnel autorisé','Notification de violation dans les 48 heures']},
+      {h:'4. Sous-traitants approuvés',li:['Google LLC (CCT)','Anthropic PBC (CCT)','Meta Platforms (CCT)','Metanet AG — Suisse','Partenaire infrastructure vocale (CCT)','Stripe Inc. (CCT)'],p:'Modifications notifiées 30 jours à l\'avance par e-mail.'},
+      {h:'5. For juridictionnel',note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
     ]
   },
   partner:{
     de:[
-      {h:'1. Gegenstand', p:'Dieser Vertrag regelt die Zusammenarbeit bei Entwicklung, Betrieb und Vermarktung von KI-gestützten Software-Lösungen und Web-Applikationen auf Basis der SNOB-Plattform.'},
-      {h:'2. Leistungen von SNOB', items:['Zugang zur SNOB-Plattform (AI Brain, Calls, Chat, Automation)','Technische Integration und Onboarding-Support','White-Label-Optionen gemäss separater Vereinbarung','Dokumentation, API-Zugang und Entwickler-Support']},
-      {h:'3. Pflichten des Partners', items:['Einhaltung der SNOB-AGB und des AVV','Einholung aller Einwilligungen bei Endkunden','Keine Weitergabe von Zugangsdaten ohne Zustimmung','Meldung sicherheitsrelevanter Vorfälle innert 24 Stunden']},
-      {h:'4. Technologiepartner', items:['Google (Cloud AI, Analytics)','Anthropic (KI-Sprachmodelle)','Meta / WhatsApp Business','Metanet AG (CH-Hosting)','Stripe (Zahlungsabwicklung)','Voice-Infrastruktur-Partner']},
-      {h:'5. Geistiges Eigentum', items:['SNOB-Plattform: alle Rechte bei SNOB','Partner-Eigenentwicklungen: im Eigentum des Partners','Gemeinsame Entwicklungen: schriftliche Regelung erforderlich']},
-      {h:'6. Vertraulichkeit', p:'5 Jahre nach Vertragsende. Keine Weitergabe von Geschäftsgeheimnissen, technischer Dokumentation oder Kundendaten.'},
-      {h:'7. Kündigung', items:['30 Tage Frist zum Monatsende','Ausserordentlich bei schwerwiegender Vertragsverletzung','Abwicklung laufender Projekte innert 30 Tagen']},
-      {h:'8. Gerichtsstand', note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
+      {h:'1. Gegenstand',p:'Dieser Vertrag regelt die Zusammenarbeit bei Entwicklung, Betrieb und Vermarktung von KI-gestützten Software-Lösungen und Web-Applikationen auf Basis der SNOB-Plattform.'},
+      {h:'2. Leistungen von SNOB',li:['Zugang zur SNOB-Plattform (AI Brain, Calls, Chat, Automation)','Technische Integration und Onboarding-Support','White-Label-Optionen gemäss separater Vereinbarung','Dokumentation, API-Zugang und Entwickler-Support']},
+      {h:'3. Pflichten des Partners',li:['Einhaltung der SNOB-AGB und des AVV','Einholung aller Einwilligungen bei Endkunden','Keine Weitergabe von Zugangsdaten ohne schriftliche Zustimmung','Meldung sicherheitsrelevanter Vorfälle innert 24 Stunden']},
+      {h:'4. Technologiepartner',li:['Google (Cloud AI, Analytics)','Anthropic (KI-Sprachmodelle)','Meta / WhatsApp Business','Metanet AG (CH-Hosting)','Stripe (Zahlungsabwicklung)','Voice-Infrastruktur-Partner']},
+      {h:'5. Geistiges Eigentum',li:['SNOB-Plattform: alle Rechte bei SNOB','Partner-Eigenentwicklungen: im Eigentum des Partners','Gemeinsame Entwicklungen: schriftliche Regelung erforderlich']},
+      {h:'6. Vertraulichkeit',p:'5 Jahre nach Vertragsende. Keine Weitergabe von Geschäftsgeheimnissen, technischer Dokumentation oder Kundendaten an Dritte.'},
+      {h:'7. Kündigung',li:['30 Tage Frist zum Monatsende schriftlich via team@gosnob.com','Ausserordentlich bei schwerwiegender Vertragsverletzung mit sofortiger Wirkung','Abwicklung laufender Projekte innert 30 Tagen']},
+      {h:'8. Gerichtsstand',note:'Schweizer Recht. Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
     ],
     en:[
-      {h:'1. Subject', p:'This agreement governs the collaboration in developing, operating and marketing AI-powered software solutions and web applications based on the SNOB platform.'},
-      {h:'2. SNOB Services', items:['Access to SNOB platform (AI Brain, Calls, Chat, Automation)','Technical integration and onboarding support','White-label options per separate agreement','Documentation, API access and developer support']},
-      {h:'3. Partner Obligations', items:['Compliance with SNOB Terms and DPA','Obtaining all consents from end customers','No sharing of access credentials without consent','Reporting security incidents within 24 hours']},
-      {h:'4. Technology Partners', items:['Google (Cloud AI, Analytics)','Anthropic (AI language models)','Meta / WhatsApp Business','Metanet AG (CH Hosting)','Stripe (Payment processing)','Voice infrastructure partner']},
-      {h:'5. Intellectual Property', items:['SNOB platform: all rights with SNOB','Partner developments: owned by partner','Joint developments: written agreement required']},
-      {h:'6. Confidentiality', p:'5 years after contract end. No disclosure of trade secrets, technical documentation, or customer data.'},
-      {h:'7. Termination', items:['30 days notice to month-end','Immediate for material breach','Wind-down of projects within 30 days']},
-      {h:'8. Jurisdiction', note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
+      {h:'1. Subject',p:'This agreement governs the collaboration in developing, operating and marketing AI-powered software solutions and web applications based on the SNOB platform.'},
+      {h:'2. SNOB Services',li:['Access to SNOB platform (AI Brain, Calls, Chat, Automation)','Technical integration and onboarding support','White-label options per separate agreement','Documentation, API access and developer support']},
+      {h:'3. Partner Obligations',li:['Compliance with SNOB Terms and DPA','Obtaining all consents from end customers','No sharing of access credentials without written consent','Reporting security incidents within 24 hours']},
+      {h:'4. Technology Partners',li:['Google (Cloud AI, Analytics)','Anthropic (AI language models)','Meta / WhatsApp Business','Metanet AG (CH Hosting)','Stripe (Payment processing)','Voice infrastructure partner']},
+      {h:'5. Intellectual Property',li:['SNOB platform: all rights with SNOB','Partner developments: owned by partner','Joint developments: written agreement required']},
+      {h:'6. Confidentiality',p:'5 years after contract end. No disclosure of trade secrets, technical documentation or customer data to third parties.'},
+      {h:'7. Termination',li:['30 days notice to month-end in writing via team@gosnob.com','Immediate for material breach','Wind-down of ongoing projects within 30 days']},
+      {h:'8. Jurisdiction',note:'Swiss law. Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
     ],
     fr:[
-      {h:'1. Objet', p:"Ce contrat régit la collaboration dans le développement, l'exploitation et la commercialisation de solutions logicielles IA basées sur la plateforme SNOB."},
-      {h:'2. Services de SNOB', items:["Accès à la plateforme SNOB","Support d'intégration et d'onboarding","Options white-label selon accord séparé","Documentation et accès API"]},
-      {h:'3. Propriété intellectuelle', items:["Plateforme SNOB: tous les droits chez SNOB","Développements du partenaire: propriété du partenaire","Développements conjoints: accord écrit requis"]},
-      {h:'4. Confidentialité', p:"5 ans après la fin du contrat. Aucune divulgation de secrets commerciaux ou de données clients."},
-      {h:'5. For juridictionnel', note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
+      {h:'1. Objet',p:"Ce contrat régit la collaboration dans le développement, l'exploitation et la commercialisation de solutions logicielles IA basées sur la plateforme SNOB."},
+      {h:'2. Services de SNOB',li:['Accès à la plateforme SNOB','Support d\'intégration technique et d\'onboarding','Options white-label selon accord séparé','Documentation et accès API']},
+      {h:'3. Obligations du partenaire',li:['Respect des CGV SNOB et du DPA','Obtention des consentements auprès des clients finaux','Aucun partage d\'identifiants sans accord écrit','Signalement des incidents de sécurité dans les 24 heures']},
+      {h:'4. Propriété intellectuelle',li:['Plateforme SNOB: tous les droits chez SNOB','Développements du partenaire: propriété du partenaire','Développements conjoints: accord écrit requis']},
+      {h:'5. Confidentialité',p:'5 ans après la fin du contrat. Aucune divulgation de secrets commerciaux ou de données clients à des tiers.'},
+      {h:'6. For juridictionnel',note:'Droit suisse. For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
     ]
   },
   cookie:{
     de:[
-      {h:'1. Was sind Cookies?', p:'Cookies sind kleine Textdateien, die beim Besuch von gosnob.ai auf Ihrem Gerät gespeichert werden und Funktionalität sowie Service-Verbesserung ermöglichen.'},
-      {h:'2. Notwendige Cookies', p:'Kein Consent erforderlich.', items:['Session-Management und Authentifizierung','Sicherheits- und Betrugsschutz','Grundlegende Plattformfunktionalität']},
-      {h:'3. Analyse-Cookies', p:'Nur mit Ihrer Einwilligung.', items:['Google Analytics (Google LLC) — Nutzungsverhalten, Seitenaufrufe. Daten in die USA via SCCs.','PostHog — Produktanalyse. EU-gehostete Instanz.']},
-      {h:'4. Marketing-Cookies', p:'Nur mit Ihrer Einwilligung.', items:['Meta Pixel (Meta Platforms) — Kampagnen-Performance. USA via SCCs.']},
-      {h:'5. Wahlmöglichkeiten', items:['Consent-Banner beim ersten Besuch','Browser-Einstellungen jederzeit anpassbar','Google Analytics Opt-Out: tools.google.com/dlpage/gaoptout','Meta-Einstellungen: facebook.com/settings/']},
-      {h:'6. Aufbewahrungsdauer', items:['Session-Cookies: bis Browserschliessung','Persistente Cookies: 30 Tage bis 2 Jahre','Google Analytics: 26 Monate Standard']},
-      {h:'7. Gerichtsstand', note:'Schweizer Recht (revDSG). Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
+      {h:'1. Was sind Cookies?',p:'Cookies sind kleine Textdateien, die beim Besuch von gosnob.ai auf Ihrem Gerät gespeichert werden. Sie ermöglichen Funktionalität und helfen uns, den Service zu verbessern.'},
+      {h:'2. Notwendige Cookies',p:'Kein Consent erforderlich.',li:['Session-Management und Authentifizierung','Sicherheits- und Betrugsschutz','Grundlegende Plattformfunktionalität']},
+      {h:'3. Analyse-Cookies',p:'Nur mit Ihrer Einwilligung.',li:['Google Analytics (Google LLC) — Nutzungsverhalten, Seitenaufrufe. Daten in die USA via SCCs.','PostHog — Produktanalyse, Feature-Nutzung. EU-gehostete Instanz.']},
+      {h:'4. Marketing-Cookies',p:'Nur mit Ihrer Einwilligung.',li:['Meta Pixel (Meta Platforms) — Kampagnen-Performance, Remarketing. USA via SCCs.']},
+      {h:'5. Ihre Wahlmöglichkeiten',li:['Consent-Banner beim ersten Besuch','Browser-Einstellungen jederzeit anpassbar','Google Analytics Opt-Out: tools.google.com/dlpage/gaoptout','Meta-Datenschutzeinstellungen: facebook.com/settings/']},
+      {h:'6. Aufbewahrungsdauer',li:['Session-Cookies: bis Browserschliessung','Persistente Cookies: 30 Tage bis 2 Jahre','Google Analytics: 26 Monate Standard']},
+      {h:'7. Gerichtsstand',note:'Schweizer Recht (revDSG). Gerichtsstand Basel-Stadt, Schweiz. — Stand: April 2026 — team@gosnob.com'}
     ],
     en:[
-      {h:'1. What Are Cookies?', p:'Cookies are small text files stored on your device when visiting gosnob.ai. They enable functionality and help us improve our service.'},
-      {h:'2. Necessary Cookies', p:'No consent required.', items:['Session management and authentication','Security and fraud protection','Basic platform functionality']},
-      {h:'3. Analytics Cookies', p:'With your consent only.', items:['Google Analytics — usage behaviour, page views. Data transferred to USA via SCCs.','PostHog — product analytics. EU-hosted instance.']},
-      {h:'4. Marketing Cookies', p:'With your consent only.', items:['Meta Pixel — campaign performance, remarketing. USA via SCCs.']},
-      {h:'5. Your Choices', items:['Consent banner on first visit','Browser settings adjustable anytime','Google Analytics Opt-Out: tools.google.com/dlpage/gaoptout','Meta settings: facebook.com/settings/']},
-      {h:'6. Retention', items:['Session cookies: until browser close','Persistent cookies: 30 days to 2 years','Google Analytics: 26 months default']},
-      {h:'7. Jurisdiction', note:'Swiss law (revFADP). Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
+      {h:'1. What Are Cookies?',p:'Cookies are small text files stored on your device when visiting gosnob.ai. They enable functionality and help us improve our service.'},
+      {h:'2. Necessary Cookies',p:'No consent required.',li:['Session management and authentication','Security and fraud protection','Basic platform functionality']},
+      {h:'3. Analytics Cookies',p:'With your consent only.',li:['Google Analytics (Google LLC) — usage behaviour, page views. Data transferred to USA via SCCs.','PostHog — product analytics. EU-hosted instance.']},
+      {h:'4. Marketing Cookies',p:'With your consent only.',li:['Meta Pixel (Meta Platforms) — campaign performance, remarketing. USA via SCCs.']},
+      {h:'5. Your Choices',li:['Consent banner on first visit','Browser settings adjustable anytime','Google Analytics Opt-Out: tools.google.com/dlpage/gaoptout','Meta privacy settings: facebook.com/settings/']},
+      {h:'6. Retention',li:['Session cookies: until browser close','Persistent cookies: 30 days to 2 years','Google Analytics: 26 months default']},
+      {h:'7. Jurisdiction',note:'Swiss law (revFADP). Jurisdiction: Basel-Stadt, Switzerland. — Last updated: April 2026 — team@gosnob.com'}
     ],
     fr:[
-      {h:'1. Que sont les cookies?', p:"Les cookies sont de petits fichiers texte stockés sur votre appareil lors de la visite de gosnob.ai."},
-      {h:'2. Cookies nécessaires', p:'Aucun consentement requis.', items:['Gestion de session et authentification','Sécurité et protection contre la fraude']},
-      {h:'3. Cookies analytiques', p:'Avec votre consentement uniquement.', items:['Google Analytics — comportement utilisateurs. USA via CCT.','PostHog — analytique produit. Instance UE.']},
-      {h:'4. Cookies marketing', p:'Avec votre consentement uniquement.', items:['Meta Pixel — performance des campagnes. USA via CCT.']},
-      {h:'5. For juridictionnel', note:'Droit suisse (LPD révisée). For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
+      {h:'1. Que sont les cookies?',p:"Les cookies sont de petits fichiers texte stockés sur votre appareil lors de la visite de gosnob.ai."},
+      {h:'2. Cookies nécessaires',p:'Aucun consentement requis.',li:['Gestion de session et authentification','Sécurité et protection contre la fraude','Fonctionnalité de base de la plateforme']},
+      {h:'3. Cookies analytiques',p:'Avec votre consentement uniquement.',li:['Google Analytics — comportement utilisateurs, pages vues. USA via CCT.','PostHog — analytique produit. Instance UE.']},
+      {h:'4. Cookies marketing',p:'Avec votre consentement uniquement.',li:['Meta Pixel — performance des campagnes, remarketing. USA via CCT.']},
+      {h:'5. Vos choix',li:["Bannière de consentement lors de la première visite","Paramètres du navigateur modifiables à tout moment","Google Analytics Opt-Out: tools.google.com/dlpage/gaoptout","Paramètres Meta: facebook.com/settings/"]},
+      {h:'6. For juridictionnel',note:'Droit suisse (LPD révisée). For juridictionnel: Bâle-Ville, Suisse. — Mise à jour: Avril 2026 — team@gosnob.com'}
     ]
   }
 };
 
 // ── RENDER ───────────────────────────────────────────────────
-function renderDoc(id, l){
+function renderDoc(id){
   var el = document.getElementById('body-'+id);
   if(!el) return;
-  var sections = docs[id] && docs[id][l] ? docs[id][l] : docs[id]['de'];
+  var sections = D[id][lang] || D[id]['de'];
   var html = '';
   sections.forEach(function(s){
-    html += '<div class="legal-sec">';
-    if(s.h) html += '<div class="legal-sec-title">'+s.h+'</div>';
-    if(s.sub) html += '<div class="legal-sec-sub">'+s.sub+'</div>';
-    if(s.p) html += '<p class="legal-p">'+s.p+'</p>';
-    if(s.items){
-      html += '<ul class="legal-ul">';
-      s.items.forEach(function(item){ html += '<li>'+item+'</li>'; });
+    html += '<div class="lsec">';
+    if(s.h) html += '<div class="lsec-h">'+s.h+'</div>';
+    if(s.sub) html += '<div class="lsec-sub">'+s.sub+'</div>';
+    if(s.p) html += '<p class="lp">'+s.p+'</p>';
+    if(s.li && s.li.length){
+      html += '<ul class="lul">';
+      s.li.forEach(function(item){ html += '<li>'+item+'</li>'; });
       html += '</ul>';
     }
-    if(s.note) html += '<div class="legal-note"><p>'+s.note+'</p></div>';
+    if(s.note) html += '<div class="lnote"><p>'+s.note+'</p></div>';
     html += '</div>';
   });
   el.innerHTML = html;
 }
 
-// panel id → translation key mapping
-var panelTitleKeys = {privacy:'d1t', agb:'d2t', dpa:'d3t', partner:'d4t', cookie:'d5t'};
-
 function renderAll(){
-  var ids = ['privacy','agb','dpa','partner','cookie'];
-  ids.forEach(function(id){
-    renderDoc(id, lang);
-    // sync panel title
-    var titleEl = document.getElementById('ptitle-'+id);
-    if(titleEl && T[lang] && T[lang][panelTitleKeys[id]]){
-      titleEl.textContent = T[lang][panelTitleKeys[id]];
-    }
-  });
+  ['privacy','agb','dpa','partner','cookie'].forEach(renderDoc);
 }
 
 // ── TOGGLE ───────────────────────────────────────────────────
@@ -984,25 +896,25 @@ var openId = null;
 
 function toggleDoc(id){
   if(openId === id){ closeDoc(id); return; }
-  if(openId){ closeDoc(openId); }
+  if(openId) closeDoc(openId);
   openId = id;
-  renderDoc(id, lang);
-  document.getElementById('card-'+id).classList.add('active');
+  renderDoc(id);
+  document.getElementById('card-'+id).classList.add('on');
   var panel = document.getElementById('panel-'+id);
-  panel.classList.add('active');
-  setTimeout(function(){ panel.scrollIntoView({behavior:'smooth',block:'start'}); }, 40);
+  panel.classList.add('on');
+  setTimeout(function(){ panel.scrollIntoView({behavior:'smooth',block:'start'}); }, 30);
 }
 
 function closeDoc(id){
-  var card = document.getElementById('card-'+id);
-  var panel = document.getElementById('panel-'+id);
-  if(card) card.classList.remove('active');
-  if(panel) panel.classList.remove('active');
-  if(openId === id) openId = null;
+  var c = document.getElementById('card-'+id);
+  var p = document.getElementById('panel-'+id);
+  if(c) c.classList.remove('on');
+  if(p) p.classList.remove('on');
+  if(openId===id) openId = null;
 }
 
-// ── DOWNLOAD ─────────────────────────────────────────────────
-var files = {
+// ── DOWNLOADS ────────────────────────────────────────────────
+var FILES = {
   privacy:'goSNOB_Datenschutzerklaerung.docx',
   agb:'goSNOB_AGB.docx',
   dpa:'goSNOB_DPA_AVV.docx',
@@ -1012,20 +924,19 @@ var files = {
 
 function dlDoc(id){
   var a = document.createElement('a');
-  a.href = files[id];
-  a.download = files[id];
+  a.href = FILES[id];
+  a.download = FILES[id];
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
 function dlAll(){
-  var keys = Object.keys(files);
-  keys.forEach(function(id, i){
+  Object.keys(FILES).forEach(function(id, i){
     setTimeout(function(){
       var a = document.createElement('a');
-      a.href = files[id];
-      a.download = files[id];
+      a.href = FILES[id];
+      a.download = FILES[id];
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1033,17 +944,14 @@ function dlAll(){
   });
 }
 
-// ── CI BADGE SVG ─────────────────────────────────────────────
 function dlCI(){
-  var svg = [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="44" viewBox="0 0 520 44">',
-    '<rect width="520" height="44" fill="#ffffff"/>',
-    '<rect width="3" height="44" fill="#d946ef"/>',
-    '<circle cx="18" cy="22" r="4" fill="#d946ef"/>',
-    '<text x="30" y="15" font-family="monospace" font-size="11" font-weight="bold" fill="#000000" letter-spacing="1">goSNOB.ai</text>',
-    '<text x="30" y="31" font-family="monospace" font-size="9" fill="#888888" letter-spacing="2">S.N.O.B. AI PLATFORM — BASEL, CH — team@gosnob.com — \u00a9 2026</text>',
-    '</svg>'
-  ].join('');
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="540" height="48" viewBox="0 0 540 48">'
+    +'<rect width="540" height="48" fill="#ffffff"/>'
+    +'<rect width="3" height="48" fill="#d946ef"/>'
+    +'<circle cx="20" cy="24" r="5" fill="#d946ef"/>'
+    +'<text x="34" y="16" font-family="monospace" font-size="12" font-weight="bold" fill="#000000" letter-spacing="1">goSNOB.ai</text>'
+    +'<text x="34" y="33" font-family="monospace" font-size="9" fill="#888888" letter-spacing="2">S.N.O.B. AI PLATFORM \u2014 BASEL, CH \u2014 team@gosnob.com \u2014 \u00a9 2026</text>'
+    +'</svg>';
   var blob = new Blob([svg],{type:'image/svg+xml'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
